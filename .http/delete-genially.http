@@ -1,0 +1,51 @@
+@idToDelete = {{$random.idNumber.valid}}
+@unknownId = {{$random.idNumber.valid}}
+
+### Fixture: create a genially to delete
+POST {{baseUrl}}/genially
+Content-Type: application/json
+
+{
+  "id": "{{idToDelete}}",
+  "name": "{{$random.alphabetic(12)}}",
+  "description": "{{$random.alphabetic(20)}}"
+}
+> {%
+  client.test("Fixture created 201", () => {
+    client.assert(response.status === 201, `Expected 201 got ${response.status}`);
+  });
+%}
+
+### Delete existing, expect 204 No Content
+DELETE {{baseUrl}}/genially/{{idToDelete}}
+
+> {%
+  client.test("204 No Content", () => {
+    client.assert(response.status === 204, `Expected 204 got ${response.status}`);
+  });
+  client.test("Empty body", () => {
+    client.assert(!response.body || response.body === "", "Expected empty body");
+  });
+%}
+
+### Delete again, accept 204 (idempotent) or 412 (already deleted)
+DELETE {{baseUrl}}/genially/{{idToDelete}}
+
+> {%
+  client.test("Second delete is 204 or 412", () => {
+    const status = Number(response.status);
+    client.assert(status === 204 || status === 412, `Expected 204 or 412 got ${response.status}`);
+  });
+%}
+
+### Delete unknown id, expect 404
+DELETE {{baseUrl}}/genially/{{unknownId}}
+
+> {%
+  client.test("404 Not Found", () => {
+    client.assert(response.status === 404, `Expected 404 got ${response.status}`);
+  });
+  client.test("JSON error body", () => {
+    client.assert(response.contentType.mimeType === "application/json", "Expected JSON error body");
+  });
+%}
