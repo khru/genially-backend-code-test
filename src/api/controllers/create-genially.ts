@@ -16,11 +16,16 @@ type CreateGeniallyResponse = {
 };
 
 export const execute = async (request: Request, response: Response) => {
-  const {id, name, description} = request.body;
+  const {id, name} = request.body;
 
   if (!id) {
     return response.status(400).json({error: "Field 'id' is required"});
   }
+
+  if (!name) {
+    return response.status(400).json({error: "Field 'name' is required"});
+  }
+
 
   const genially: Genially = await createGeniallyService.execute(request.body);
   const geniallyResponse: CreateGeniallyResponse = createGeniallyResponse(genially);

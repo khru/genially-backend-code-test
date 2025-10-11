@@ -40,4 +40,21 @@ describe("Create Genially Controller", () => {
     expect(response.body).toHaveProperty("error");
     expect(response.body.error).toContain("id");
   });
+
+  it("POST / should return 400 when name is missing", async () => {
+    const geniallyPayload = {
+      id: "a-random-id",
+      description: "A random genially description"
+    };
+
+    const response = await request(app)
+      .post("/genially")
+      .send(geniallyPayload)
+      .expect("Content-Type", /json/)
+      .expect(400);
+
+    expect(response.body).toHaveProperty("error");
+    expect(response.body.error).toContain("name");
+  });
+
 });
