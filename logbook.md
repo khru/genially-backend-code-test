@@ -21,5 +21,15 @@ I've also configured the `jest.config.ts` file.
 
 After this I've created a test of the healthcheck.
 
-Now that I have I have the IDE using the right formatting and that I have a testing framework I can start with the functionality.
+Now that I have the IDE using the right formatting and that I have a testing framework I can start with the functionality.
 
+Then I created and ADR to justify my decision.
+
+## Making the first TDD cycle to create a genially
+I've created the first acceptance test, while I was working on it, I identify a bug on the InMemoryRepository as well as an unexpected behavior on it so I cover it with test and make the test, after that I've updated the test to cover the behavior I change.
+
+From there I move to finish the "use case".
+
+## Adding http client for all the use cases
+Been an API, is important to test the behaviors, having behaviors that are not simple to evaluate with the browser I've
+asked Moi and Noel about the IDE that the use and they mention that was WebStorm, so I decided to use the http client from the IDE
