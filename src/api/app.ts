@@ -5,7 +5,7 @@ import lusca from "lusca";
 
 // Controllers (route handlers)
 import * as healthController from "./controllers/health";
-import { createGeniallyController } from "./dependency-injection";
+import { createGeniallyController, deleteGeniallyController } from "./dependency-injection";
 
 // Create Express server
 const app = express();
@@ -21,5 +21,6 @@ app.use(lusca.xssProtection(true));
 // Primary app routes
 app.get("/", healthController.check);
 app.post("/genially", createGeniallyController);
+app.delete("/genially/:id", deleteGeniallyController);
 
 export default app;
