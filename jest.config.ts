@@ -1,4 +1,3 @@
-
 import type { Config } from "jest";
 
 const config: Config = {
@@ -6,7 +5,6 @@ const config: Config = {
   testEnvironment: "node",
   roots: ["<rootDir>/src", "<rootDir>/tests"],
   testMatch: [
-    "<rootDir>/tests/**/*.ts",
     "<rootDir>/tests/**/*.test.ts",
     "<rootDir>/tests/**/*.spec.ts"
   ],
