@@ -9,13 +9,11 @@ describe("Delete Genially Controller", () => {
   });
 
   it("DELETE /genially/:id returns 204 when genially exists", async () => {
-    // Arrange: create first
     await agent
       .post("/genially")
       .send({id: "delete-success-id", name: "To delete", description: "ok"})
       .expect(201);
 
-    // Act
     await agent
       .delete("/genially/delete-success-id")
       .expect(204);
@@ -32,7 +30,7 @@ describe("Delete Genially Controller", () => {
   });
 
   it("DELETE /genially/:id returns 412 when already deleted", async () => {
-    // Arrange: create and delete once
+
     await agent
       .post("/genially")
       .send({id: "delete-already-deleted-id", name: "To delete twice"})
@@ -42,7 +40,6 @@ describe("Delete Genially Controller", () => {
       .delete("/genially/delete-already-deleted-id")
       .expect(204);
 
-    // Act: delete again
     const res = await agent
       .delete("/genially/delete-already-deleted-id")
       .expect("Content-Type", /json/)
