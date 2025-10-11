@@ -3,7 +3,7 @@ import DeleteGeniallyService from "../../contexts/core/genially/application/Dele
 
 export function deleteGeniallyControllerFactory(service: DeleteGeniallyService) {
   return async (request: Request, response: Response) => {
-    await service.execute(request.params.id);
+    await service.execute({id: request.params.id as string});
     return response.status(204).send();
   };
 }

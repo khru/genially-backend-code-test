@@ -1,11 +1,15 @@
 import Genially from "../domain/Genially";
 import GeniallyRepository from "../domain/GeniallyRepository";
 
+type DeleteGeniallyServiceRequest = {
+  id: string;
+};
+
 export default class DeleteGeniallyService {
   constructor(private repository: GeniallyRepository) {
   }
 
-  public async execute(id: string): Promise<Genially> {
+  public async execute(request: DeleteGeniallyServiceRequest): Promise<Genially> {
     return undefined;
   }
 }
