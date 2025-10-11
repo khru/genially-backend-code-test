@@ -1,5 +1,7 @@
 import InMemoryGeniallyRepository from "../../src/contexts/core/genially/infrastructure/InMemoryGeniallyRepository";
 import Genially from "../../src/contexts/core/genially/domain/Genially";
+import { getAsyncError } from "../helpers/ErrorHandler";
+import GeniallyNotExist from "../../src/contexts/core/genially/domain/GeniallyNotExist";
 
 
 describe("InMemoryGeniallyRepository", () => {
@@ -21,8 +23,12 @@ describe("InMemoryGeniallyRepository", () => {
   });
 
   describe("find", () => {
-    it("should return a undefined", async () => {
-      expect(await repository.find("an-unexistent-id")).toEqual(undefined);
+    it("should return a throw an error when id is not found", async () => {
+      const error = await getAsyncError<GeniallyNotExist>(async () =>
+        await repository.find("an-unexistent-id")
+      );
+
+      expect(error.message).toContain("an-unexistent-id");
     });
   });
 });

@@ -1,6 +1,6 @@
 import Genially from "../../src/contexts/core/genially/domain/Genially";
 import GeniallyValidationError from "../../src/contexts/core/genially/domain/GeniallyValidationError";
-import getError from "../helpers/ErrorHandler";
+import { getError } from "../helpers/ErrorHandler";
 
 
 describe("Genially validations", () => {
@@ -26,8 +26,8 @@ describe("Genially validations", () => {
       {name: "ab", case: "below min length"},
       {name: "a".repeat(21), case: "above max length"},
     ])("includes the length rule when $case", ({name}) => {
-      const err = getError<GeniallyValidationError>(() => new Genially("id", name));
-      expect(err.errors).toEqual(
+      const error = getError<GeniallyValidationError>(() => new Genially("id", name));
+      expect(error.errors).toEqual(
         expect.arrayContaining([expect.stringContaining("between 3 and 20 characters")])
       );
     });
@@ -43,10 +43,10 @@ describe("Genially validations", () => {
     });
 
     it("rejects description longer than 125", () => {
-      const err = getError<GeniallyValidationError>(() =>
+      const error = getError<GeniallyValidationError>(() =>
         new Genially("id", "ValidName", "a".repeat(126))
       );
-      expect(err.errors).toEqual(
+      expect(error.errors).toEqual(
         expect.arrayContaining([
           expect.stringContaining("Description cannot exceed 125 characters"),
         ])
@@ -56,18 +56,18 @@ describe("Genially validations", () => {
 
   describe("multiple violations", () => {
     it("aggregates messages without relying on order", () => {
-      const err = getError<GeniallyValidationError>(() =>
+      const error = getError<GeniallyValidationError>(() =>
         new Genially("id", "ab", "a".repeat(126))
       );
 
-      expect(err.errors).toHaveLength(2);
-      expect(err.errors).toEqual(
+      expect(error.errors).toHaveLength(2);
+      expect(error.errors).toEqual(
         expect.arrayContaining([
           expect.stringContaining("between 3 and 20 characters"),
           expect.stringContaining("Description cannot exceed 125 characters"),
         ])
       );
-      expect(err.message).toContain("Validation failed:");
+      expect(error.message).toContain("Validation failed:");
     });
   });
 });
