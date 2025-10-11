@@ -19,4 +19,10 @@ describe("InMemoryGeniallyRepository", () => {
       expect(await repository.find("1")).toEqual(genially2);
     });
   });
+
+  describe("find", () => {
+    it("should return a undefined", async () => {
+      expect(await repository.find("an-unexistent-id")).toEqual(undefined);
+    });
+  });
 });

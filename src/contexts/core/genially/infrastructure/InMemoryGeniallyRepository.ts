@@ -9,7 +9,7 @@ export default class InMemoryGeniallyRepository implements GeniallyRepository {
     this.geniallys.push(genially);
   }
 
-  async find(id: string): Promise<Genially> {
+  async find(id: string): Promise<Genially | undefined> {
     return this.geniallys.find((genially) => genially.id === id);
   }
 
