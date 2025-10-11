@@ -70,7 +70,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ghcr.io/${{ steps.set_owner.outputs.owner_lower  }}/genially-apilatest .
+          docker build -t ghcr.io/${{ steps.set_owner.outputs.owner_lower  }}/genially-api:latest .
 
       - name: Push Docker image
         run: |
