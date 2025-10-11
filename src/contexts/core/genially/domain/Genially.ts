@@ -1,6 +1,7 @@
-import GeniallyValidationError from "./GeniallyValidationError";
+import GeniallyValidationError from "./exception/GeniallyValidationError";
 import GeniallyName from "./GeniallyName";
 import GeniallyDescription from "./GeniallyDescription";
+import GeniallyAlreadyDeleted from "./exception/GeniallyAlreadyDeleted";
 
 export default class Genially {
   private readonly _id: string;
@@ -8,7 +9,7 @@ export default class Genially {
   private readonly _description: GeniallyDescription;
   private readonly _createdAt: Date;
   private readonly _modifiedAt: Date;
-  private readonly _deletedAt: Date;
+  private _deletedAt: Date;
 
   private readonly _validationErrors: string[] = [];
   private readonly thresholdErrors = 0;
@@ -62,5 +63,10 @@ export default class Genially {
 
   get deletedAt(): Date {
     return this._deletedAt;
+  }
+
+  delete(now: Date = new Date()) {
+    if (this._deletedAt) throw new GeniallyAlreadyDeleted(this._id);
+    this._deletedAt = now;
   }
 }

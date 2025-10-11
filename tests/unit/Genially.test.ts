@@ -1,6 +1,7 @@
 import Genially from "../../src/contexts/core/genially/domain/Genially";
-import GeniallyValidationError from "../../src/contexts/core/genially/domain/GeniallyValidationError";
 import { getError } from "../helpers/ErrorHandler";
+import GeniallyValidationError from "../../src/contexts/core/genially/domain/exception/GeniallyValidationError";
+import GeniallyAlreadyDeleted from "../../src/contexts/core/genially/domain/exception/GeniallyAlreadyDeleted";
 
 
 describe("Genially validations", () => {
@@ -68,6 +69,37 @@ describe("Genially validations", () => {
         ])
       );
       expect(error.message).toContain("Validation failed:");
+    });
+  });
+
+  describe("Genially.delete", () => {
+    it("does not have a delete date by default", () => {
+      const genially = new Genially("delete-default-state-id", "Valid Name");
+      expect(genially.deletedAt).toBeUndefined();
+    });
+
+    it("sets a deletion date on the first delete call", () => {
+      const genially = new Genially("delete-first-call-id", "Valid Name");
+
+      genially.delete();
+
+      expect(genially.deletedAt).toBeInstanceOf(Date);
+    });
+
+    it("throws GeniallyAlreadyDeleted when called a second time", () => {
+      const genially = new Genially("delete-second-call-id", "Valid Name");
+      genially.delete();
+
+      expect(() => genially.delete()).toThrow(GeniallyAlreadyDeleted);
+    });
+
+    it("does not change the deletion date when delete is called again", () => {
+      const genially = new Genially("delete-does-not-change-id", "Valid Name");
+      genially.delete();
+      const firstDeletionDate = genially.deletedAt;
+
+      expect(() => genially.delete()).toThrow(GeniallyAlreadyDeleted);
+      expect(genially.deletedAt).toBe(firstDeletionDate);
     });
   });
 });

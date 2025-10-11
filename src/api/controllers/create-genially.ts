@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import CreateGeniallyService from "../../contexts/core/genially/application/CreateGeniallyService";
 import Genially from "../../contexts/core/genially/domain/Genially";
-import GeniallyValidationError from "../../contexts/core/genially/domain/GeniallyValidationError";
+import GeniallyValidationError from "../../contexts/core/genially/domain/exception/GeniallyValidationError";
 
 type CreateGeniallyResponse = {
   id: string;

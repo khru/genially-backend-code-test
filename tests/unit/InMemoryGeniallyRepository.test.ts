@@ -1,7 +1,7 @@
 import InMemoryGeniallyRepository from "../../src/contexts/core/genially/infrastructure/InMemoryGeniallyRepository";
 import Genially from "../../src/contexts/core/genially/domain/Genially";
 import { getAsyncError } from "../helpers/ErrorHandler";
-import GeniallyNotExist from "../../src/contexts/core/genially/domain/GeniallyNotExist";
+import GeniallyNotExist from "../../src/contexts/core/genially/domain/exception/GeniallyNotExist";
 
 
 describe("InMemoryGeniallyRepository", () => {
@@ -29,6 +29,37 @@ describe("InMemoryGeniallyRepository", () => {
       );
 
       expect(error.message).toContain("an-unexistent-id");
+    });
+  });
+
+  describe("find", () => {
+    it("should return a throw an error when id is not found", async () => {
+      const error = await getAsyncError<GeniallyNotExist>(async () =>
+        await repository.find("an-unexistent-id")
+      );
+
+      expect(error.message).toContain("an-unexistent-id");
+    });
+  });
+
+  describe("delete", () => {
+    it("should delete an existing Genially", async () => {
+      const id = "delete-success-id";
+      const genially = new Genially(id, "Name");
+      await repository.save(genially);
+      await repository.delete(id);
+      const deletedGenially: Genially = await repository.find(id);
+
+      expect(deletedGenially.deletedAt).toBeInstanceOf(Date);
+    });
+
+    it("should throw and exception when trying to erase an unknown genially", async () => {
+      const id = "unknown-genially-id";
+      const error = await getAsyncError<GeniallyNotExist>(async () =>
+        await repository.delete(id)
+      );
+
+      expect(error.message).toContain(id);
     });
   });
 });

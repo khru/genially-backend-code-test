@@ -1,12 +1,12 @@
 import Genially from "../domain/Genially";
 import GeniallyRepository from "../domain/GeniallyRepository";
-import GeniallyNotExist from "../domain/GeniallyNotExist";
+import GeniallyNotExist from "../domain/exception/GeniallyNotExist";
 
 export default class InMemoryGeniallyRepository implements GeniallyRepository {
   private geniallys: Genially[] = [];
 
   async save(genially: Genially): Promise<void> {
-    await this.delete(genially.id);
+    await this.hardDelete(genially.id);
     this.geniallys.push(genially);
   }
 
@@ -19,6 +19,12 @@ export default class InMemoryGeniallyRepository implements GeniallyRepository {
   }
 
   async delete(id: string): Promise<void> {
+    const genially = await this.find(id);
+    genially.delete();
+    await this.save(genially);
+  }
+
+  private async hardDelete(id: string): Promise<void> {
     this.geniallys = this.geniallys.filter((genially) => genially.id !== id);
   }
 }
