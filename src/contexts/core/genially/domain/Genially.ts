@@ -1,53 +1,55 @@
 import GeniallyValidationError from "./GeniallyValidationError";
+import GeniallyName from "./GeniallyName";
+import GeniallyDescription from "./GeniallyDescription";
 
 export default class Genially {
-  private _id: string;
-  private _name: string;
-  private _description: string;
-  private _createdAt: Date;
-  private _modifiedAt: Date;
-  private _deletedAt: Date;
+  private readonly _id: string;
+  private readonly _name: GeniallyName;
+  private readonly _description: GeniallyDescription;
+  private readonly _createdAt: Date;
+  private readonly _modifiedAt: Date;
+  private readonly _deletedAt: Date;
+
+  private readonly _validationErrors: string[] = [];
+  private readonly thresholdErrors = 0;
 
   constructor(id: string, name: string, description?: string) {
-    const validationErrors = this.validateInput(name, description);
-
-    if (validationErrors.length > 0) {
-      throw new GeniallyValidationError(validationErrors);
-    }
 
     this._id = id;
-    this._name = name;
-    this._description = description;
+
+    try {
+      this._name = new GeniallyName(name);
+    } catch (nameError) {
+      this._validationErrors.push(nameError.message);
+    }
+
+    try {
+      this._description = new GeniallyDescription(description);
+    } catch (descriptionError) {
+      this._validationErrors.push(descriptionError.message);
+    }
+
     this._createdAt = new Date();
+
+    this.throwErrorsIfThereAre();
   }
 
-  private validateInput(name: string, description?: string): string[] {
-    const errors: string[] = [];
-
-    if (!name || name.trim().length === 0) {
-      errors.push("Name cannot be empty");
-    } else if (name.length < 3 || name.length > 20) {
-      errors.push("Name must have at least a length between 3 and 20 characters");
+  private throwErrorsIfThereAre() {
+    if (this._validationErrors.length > this.thresholdErrors) {
+      throw new GeniallyValidationError(this._validationErrors);
     }
-
-    if (description !== undefined && description.length > 125) {
-      errors.push("Description cannot exceed 125 characters");
-    }
-
-    return errors;
   }
-
 
   get id(): string {
     return this._id;
   }
 
   get name(): string {
-    return this._name;
+    return this._name.name;
   }
 
   get description(): string {
-    return this._description;
+    return this._description.description;
   }
 
   get createdAt(): Date {

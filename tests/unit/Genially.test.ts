@@ -1,14 +1,7 @@
 import Genially from "../../src/contexts/core/genially/domain/Genially";
 import GeniallyValidationError from "../../src/contexts/core/genially/domain/GeniallyValidationError";
+import getError from "../helpers/ErrorHandler";
 
-function getError<T extends Error>(fn: () => unknown): T {
-  try {
-    fn();
-  } catch (e) {
-    return e as T;
-  }
-  throw new Error("Expected function to throw");
-}
 
 describe("Genially validations", () => {
   describe("name", () => {
