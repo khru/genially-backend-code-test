@@ -25,36 +25,37 @@ describe("Create Genially Controller", () => {
     }));
   });
 
-  it("POST / should return 400 when id is missing", async () => {
-    const geniallyPayload = {
-      name: "A random genially user name",
-      description: "A random genially description"
-    };
+  describe("POST / should return 400 when pre-conditions are broken", () => {
+    it("POST / should return 400 when id is missing", async () => {
+      const geniallyPayload = {
+        name: "A random genially user name",
+        description: "A random genially description"
+      };
 
-    const response = await request(app)
-      .post("/genially")
-      .send(geniallyPayload)
-      .expect("Content-Type", /json/)
-      .expect(400);
+      const response = await request(app)
+        .post("/genially")
+        .send(geniallyPayload)
+        .expect("Content-Type", /json/)
+        .expect(400);
 
-    expect(response.body).toHaveProperty("error");
-    expect(response.body.error).toContain("id");
+      expect(response.body).toHaveProperty("error");
+      expect(response.body.error).toContain("id");
+    });
+
+    it("POST / should return 400 when name is missing", async () => {
+      const geniallyPayload = {
+        id: "a-random-id",
+        description: "A random genially description"
+      };
+
+      const response = await request(app)
+        .post("/genially")
+        .send(geniallyPayload)
+        .expect("Content-Type", /json/)
+        .expect(400);
+
+      expect(response.body).toHaveProperty("error");
+      expect(response.body.error).toContain("name");
+    });
   });
-
-  it("POST / should return 400 when name is missing", async () => {
-    const geniallyPayload = {
-      id: "a-random-id",
-      description: "A random genially description"
-    };
-
-    const response = await request(app)
-      .post("/genially")
-      .send(geniallyPayload)
-      .expect("Content-Type", /json/)
-      .expect(400);
-
-    expect(response.body).toHaveProperty("error");
-    expect(response.body.error).toContain("name");
-  });
-
 });
