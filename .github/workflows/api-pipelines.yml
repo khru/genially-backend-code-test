@@ -1,0 +1,78 @@
+name: Genially pipelines - API
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-genially-api:
+    runs-on:
+      - ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Run ESLint
+        run: npx eslint .
+
+      - name: Run tests
+        run: npm run test:coverage
+
+      - name: Upload genially api build
+        uses: actions/upload-artifact@v4
+        with:
+          name: genially-api
+          path: dist/
+
+  upload-github-registry:
+    runs-on:
+      - ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Download JAR artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: genially-api
+          path: dist/
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Requirement because registry need to be lowercase
+      - name: Push Docker image (lowercase owner)
+        id: set_owner
+        env:
+          OWNER: ${{ github.repository }}
+        run: |
+          OWNER_LOWER=$(echo "$OWNER" | tr '[:upper:]' '[:lower:]')
+          echo "owner_lower=$OWNER_LOWER" >> "$GITHUB_OUTPUT"
+
+      - name: Build Docker image
+        run: |
+          docker build -t ghcr.io/${{ steps.set_owner.outputs.owner_lower  }}/genially-apilatest .
+
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/${{ steps.set_owner.outputs.owner_lower  }}/genially-api:latest
+
