@@ -1,0 +1,61 @@
+### Create Genially - Valid with description
+POST {{baseUrl}}/genially
+Content-Type: application/json
+
+{
+  "id": "{{$random.idNumber.valid}}",
+  "name": "{{$randomAlphabetic(15)}}",
+  "description": "{{$randomAlphabetic(100)}}"
+}
+> {%
+client.test("should return status 201 and a json response", function() {
+    client.assert(response.status === 201, "Expected status 201");
+    client.assert(response.contentType.mimeType === "application/json", "Expected the response to be json, but got " + response.contentType.mimeType);
+});
+%}
+
+
+
+### Create Genially - Valid without description
+POST http://localhost:3000/genially
+Content-Type: application/json
+
+{
+  "id": "{{$random.idNumber.valid}}",
+  "name": "{{$randomAlphabetic(15)}}"
+}
+> {%
+client.test("should return status 400", function() {
+    client.assert(response.status === 400, "Expected status 400");
+});
+%}
+### Create Genially - Invalid because long description
+POST http://localhost:3000/genially
+Content-Type: application/json
+
+{
+  "id": "{{$random.idNumber.valid}}",
+  "name": "{{$randomAlphabetic(15)}}",
+  "description": "{{$randomAlphabetic(126)}}"
+}
+> {%
+client.test("should return status 400", function() {
+    client.assert(response.status === 400, "Expected status 400");
+});
+%}
+
+
+### Create Genially - Name too short (should fail)
+POST http://localhost:3000/genially
+Content-Type: application/json
+
+{
+  "id": "{{$random.idNumber.valid}}",
+  "name": "{{$randomAlphabetic(2)}}",
+  "description": "{{$randomAlphabetic(100)}}"
+}
+> {%
+client.test("should return status 400", function() {
+    client.assert(response.status === 400, "Expected status 400");
+});
+%}
