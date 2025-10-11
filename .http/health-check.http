@@ -1,0 +1,13 @@
+### Health Check
+GET {{baseUrl}}/
+Content-Type: application/json
+
+> {%
+client.test("Health check should return status 200", function() {
+    client.assert(response.status === 200, "Expected status 200");
+});
+
+client.test("Health check should return ok status", function() {
+    client.assert(response.body.status === "ok", "Expected status 'ok'");
+});
+%}
