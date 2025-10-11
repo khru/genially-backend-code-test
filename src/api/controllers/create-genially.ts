@@ -13,18 +13,23 @@ type CreateGeniallyResponse = {
   createdAt: string;
   modifiedAt: string;
   deletedAt: string;
-}
+};
+
 export const execute = async (request: Request, response: Response) => {
   const genially: Genially = await createGeniallyService.execute(request.body);
-  const geniallyResponse: CreateGeniallyResponse = {
+  const geniallyResponse: CreateGeniallyResponse = createGeniallyResponse(genially);
+  response.status(201)
+    .contentType("application/json")
+    .send(geniallyResponse);
+};
+
+function createGeniallyResponse(genially: Genially): CreateGeniallyResponse {
+  return {
     id: genially.id,
     name: genially.name,
     description: genially.description,
     createdAt: genially.createdAt.toISOString(),
     modifiedAt: genially.modifiedAt?.toISOString() || null,
     deletedAt: genially.deletedAt?.toISOString() || null
-  };
-  response.status(201).contentType("application/json").send(
-    geniallyResponse
-  );
-};
+  } as CreateGeniallyResponse;
+}
