@@ -5,7 +5,7 @@ import lusca from "lusca";
 
 // Controllers (route handlers)
 import * as healthController from "./controllers/health";
-import * as createGenially from "./controllers/create-genially";
+import { createGeniallyController } from "./dependency-injection";
 
 // Create Express server
 const app = express();
@@ -14,12 +14,12 @@ const app = express();
 app.set("port", process.env.PORT || 3000);
 app.use(compression());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(lusca.xframe("SAMEORIGIN"));
 app.use(lusca.xssProtection(true));
 
 // Primary app routes
 app.get("/", healthController.check);
-app.post("/genially", createGenially.execute);
+app.post("/genially", createGeniallyController);
 
 export default app;
