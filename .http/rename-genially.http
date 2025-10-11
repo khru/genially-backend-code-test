@@ -1,0 +1,85 @@
+### File: .http/rename-genially.http
+@idToRename = {{$random.idNumber.valid}}
+@unknownId = {{$random.idNumber.valid}}
+
+### Fixture: create a genially to be renamed
+POST {{baseUrl}}/genially
+Content-Type: application/json
+
+{
+  "id": "{{idToRename}}",
+  "name": "{{$random.alphabetic(10)}}",
+  "description": "{{$random.alphabetic(20)}}"
+}
+> {%
+  client.test("Fixture created 201", () => {
+    client.assert(response.status === 201, `Expected 201 got ${response.status}`);
+    client.assert(response.contentType.mimeType === "application/json");
+  });
+%}
+
+### Rename existing, expect 200 and modifiedAt set
+PATCH {{baseUrl}}/genially/{{idToRename}}
+Content-Type: application/json
+
+{
+  "name": "New Name"
+}
+> {%
+  client.test("200 JSON", () => {
+    client.assert(response.status === 200, `Expected 200 got ${response.status}`);
+    client.assert(response.contentType.mimeType === "application/json", "Expected JSON");
+  });
+  client.test("modifiedAt is present", () => {
+    client.assert(!!response.body.modifiedAt, "Expected modifiedAt to be set");
+  });
+  client.test("name was changed", () => {
+    client.assert(response.body.name === "New Name", "Expected name to be 'New Name'");
+  });
+%}
+
+### Rename with missing name, expect 400
+PATCH {{baseUrl}}/genially/{{idToRename}}
+Content-Type: application/json
+
+{}
+> {%
+  client.test("400 when name is missing", () => {
+    client.assert(response.status === 400, `Expected 400 got ${response.status}`);
+  });
+%}
+
+### Rename unknown id, expect 404
+PATCH {{baseUrl}}/genially/{{unknownId}}
+Content-Type: application/json
+
+{
+  "name": "Whatever"
+}
+> {%
+  client.test("404 Not Found", () => {
+    client.assert(response.status === 404, `Expected 404 got ${response.status}`);
+  });
+%}
+
+### Rename after delete, expect 412 (precondition failed)
+DELETE {{baseUrl}}/genially/{{idToRename}}
+
+> {%
+  client.test("Delete returns 204", () => {
+    client.assert(response.status === 204, `Expected 204 got ${response.status}`);
+  });
+%}
+
+### Rename after delete, expect 412 (precondition failed)
+PATCH {{baseUrl}}/genially/{{idToRename}}
+Content-Type: application/json
+
+{
+  "name": "Another Name"
+}
+> {%
+  client.test("412 Already deleted", () => {
+    client.assert(response.status === 412, `Expected 412 got ${response.status}`);
+  });
+%}

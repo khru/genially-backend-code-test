@@ -2,15 +2,7 @@ import { Request, Response } from "express";
 import CreateGeniallyService from "../../contexts/core/genially/application/CreateGeniallyService";
 import Genially from "../../contexts/core/genially/domain/Genially";
 import GeniallyValidationError from "../../contexts/core/genially/domain/exception/GeniallyValidationError";
-
-type CreateGeniallyResponse = {
-  id: string;
-  name: string;
-  description: string;
-  createdAt: string;
-  modifiedAt: string;
-  deletedAt: string;
-};
+import { createGeniallyResponse, GeniallyResponse } from "./responses/GeniallyResponse";
 
 export function createGeniallyControllerFactory(createGeniallyService: CreateGeniallyService) {
   return async (request: Request, response: Response) => {
@@ -26,7 +18,7 @@ export function createGeniallyControllerFactory(createGeniallyService: CreateGen
 
     try {
       const genially: Genially = await createGeniallyService.execute(request.body);
-      const geniallyResponse: CreateGeniallyResponse = createGeniallyResponse(genially);
+      const geniallyResponse: GeniallyResponse = createGeniallyResponse(genially);
       response.status(201)
         .contentType("application/json")
         .send(geniallyResponse);
@@ -46,14 +38,4 @@ export function createGeniallyControllerFactory(createGeniallyService: CreateGen
 
   };
 
-  function createGeniallyResponse(genially: Genially): CreateGeniallyResponse {
-    return {
-      id: genially.id,
-      name: genially.name,
-      description: genially.description,
-      createdAt: genially.createdAt.toISOString(),
-      modifiedAt: genially.modifiedAt?.toISOString() || null,
-      deletedAt: genially.deletedAt?.toISOString() || null
-    } as CreateGeniallyResponse;
-  }
 }

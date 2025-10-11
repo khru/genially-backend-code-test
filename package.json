@@ -2,7 +2,7 @@
   "name": "backend-code-test",
   "private": true,
   "version": "1.0.0",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "build-ts": "tsc",
     "build": "npm run build-ts && npm run lint",

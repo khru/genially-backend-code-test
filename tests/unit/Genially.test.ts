@@ -2,6 +2,7 @@ import Genially from "../../src/contexts/core/genially/domain/Genially";
 import { getError } from "../helpers/ErrorHandler";
 import GeniallyValidationError from "../../src/contexts/core/genially/domain/exception/GeniallyValidationError";
 import GeniallyAlreadyDeleted from "../../src/contexts/core/genially/domain/exception/GeniallyAlreadyDeleted";
+import { InvalidGeniallyNameError } from "../../src/contexts/core/genially/domain/exception/InvalidGeniallyNameError";
 
 
 describe("Genially validations", () => {
@@ -100,6 +101,35 @@ describe("Genially validations", () => {
 
       expect(() => genially.delete()).toThrow(GeniallyAlreadyDeleted);
       expect(genially.deletedAt).toBe(firstDeletionDate);
+    });
+  });
+
+  describe("Genially.rename", () => {
+    it("changes the name and sets a modification date", () => {
+      const genially = new Genially("rename-domain-id", "Old Name");
+      expect(genially.modifiedAt).toBeUndefined();
+
+      genially.rename("New Name");
+
+      expect(genially.name).toBe("New Name");
+      expect(genially.modifiedAt).toBeInstanceOf(Date);
+    });
+
+    it.each([
+      {case: "too short", newName: "ab"},
+      {case: "too long", newName: "a".repeat(21)},
+      {case: "empty", newName: ""},
+      {case: "whitespace", newName: "   "},
+    ])("throws InvalidGeniallyNameError when name is invalid ($case)", ({newName}) => {
+      const genially = new Genially("rename-domain-invalid-id", "Old Name");
+      expect(() => genially.rename(newName)).toThrow(InvalidGeniallyNameError);
+    });
+
+    it("throws GeniallyAlreadyDeleted if the genially is deleted", () => {
+      const genially = new Genially("rename-domain-deleted-id", "Old Name");
+      genially.delete();
+
+      expect(() => genially.rename("New Name")).toThrow(GeniallyAlreadyDeleted);
     });
   });
 });

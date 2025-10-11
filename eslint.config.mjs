@@ -15,9 +15,7 @@ export default [
       "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/no-inferrable-types": [
         "warn",
-        {
-          ignoreParameters: true,
-        },
+        {ignoreParameters: true}
       ],
       "@typescript-eslint/no-unused-vars": "warn",
     },

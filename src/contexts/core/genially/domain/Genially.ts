@@ -5,10 +5,10 @@ import GeniallyAlreadyDeleted from "./exception/GeniallyAlreadyDeleted";
 
 export default class Genially {
   private readonly _id: string;
-  private readonly _name: GeniallyName;
+  private _name: GeniallyName;
   private readonly _description: GeniallyDescription;
   private readonly _createdAt: Date;
-  private readonly _modifiedAt: Date;
+  private _modifiedAt: Date;
   private _deletedAt: Date;
 
   private readonly _validationErrors: string[] = [];
@@ -68,5 +68,13 @@ export default class Genially {
   delete(now: Date = new Date()) {
     if (this._deletedAt) throw new GeniallyAlreadyDeleted(this._id);
     this._deletedAt = now;
+  }
+
+  rename(newName: string) {
+    if (this._deletedAt) {
+      throw new GeniallyAlreadyDeleted(this._id);
+    }
+    this._name = new GeniallyName(newName);
+    this._modifiedAt = new Date();
   }
 }
