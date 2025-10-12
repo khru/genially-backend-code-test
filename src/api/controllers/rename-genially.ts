@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import RenameGeniallyService from "../../contexts/core/genially/application/RenameGeniallyService";
+import RenameGeniallyService from "@application/RenameGeniallyService";
 import { createGeniallyResponse, GeniallyResponse } from "./responses/GeniallyResponse";
-import { InvalidGeniallyNameError } from "../../contexts/core/genially/domain/exception/InvalidGeniallyNameError";
-import GeniallyAlreadyDeleted from "../../contexts/core/genially/domain/exception/GeniallyAlreadyDeleted";
-import GeniallyNotExist from "../../contexts/core/genially/domain/exception/GeniallyNotExist";
+import { InvalidGeniallyNameError } from "@domain/exception/InvalidGeniallyNameError";
+import GeniallyAlreadyDeleted from "@domain/exception/GeniallyAlreadyDeleted";
+import GeniallyNotExist from "@domain/exception/GeniallyNotExist";
 
 
 export function renameGeniallyControllerFactory(service: RenameGeniallyService) {

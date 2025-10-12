@@ -1,4 +1,4 @@
-import Genially from "./Genially";
+import Genially from "@domain/Genially";
 
 interface GeniallyRepository {
   save(genially: Genially): Promise<void>;

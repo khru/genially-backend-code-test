@@ -1,4 +1,4 @@
-import GeniallyRepository from "../domain/GeniallyRepository";
+import GeniallyRepository from "@domain/GeniallyRepository";
 
 type DeleteGeniallyServiceRequest = {
   id: string;

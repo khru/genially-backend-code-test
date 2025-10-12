@@ -1,5 +1,8 @@
 import type { Config } from "jest";
 
+import { compilerOptions } from "./tsconfig.json";
+import { pathsToModuleNameMapper } from "ts-jest";
+
 const config: Config = {
   preset: "ts-jest",
   testEnvironment: "node",
@@ -27,7 +30,9 @@ const config: Config = {
   moduleFileExtensions: ["ts", "js", "json"],
   clearMocks: true,
   verbose: true,
-  testTimeout: 10000
+  testTimeout: 10000,
+  modulePaths: [compilerOptions.baseUrl],
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
 };
 
 export default config;

@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import CreateGeniallyService from "../../contexts/core/genially/application/CreateGeniallyService";
-import Genially from "../../contexts/core/genially/domain/Genially";
-import GeniallyValidationError from "../../contexts/core/genially/domain/exception/GeniallyValidationError";
-import { createGeniallyResponse, GeniallyResponse } from "./responses/GeniallyResponse";
+import CreateGeniallyService from "@application/CreateGeniallyService";
+import Genially from "@domain/Genially";
+import GeniallyValidationError from "@domain/exception/GeniallyValidationError";
+import { createGeniallyResponse, GeniallyResponse } from "@controllers/responses/GeniallyResponse";
 
 export function createGeniallyControllerFactory(createGeniallyService: CreateGeniallyService) {
   return async (request: Request, response: Response) => {

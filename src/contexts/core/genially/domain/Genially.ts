@@ -1,7 +1,7 @@
-import GeniallyValidationError from "./exception/GeniallyValidationError";
-import GeniallyName from "./GeniallyName";
-import GeniallyDescription from "./GeniallyDescription";
-import GeniallyAlreadyDeleted from "./exception/GeniallyAlreadyDeleted";
+import GeniallyValidationError from "@domain/exception/GeniallyValidationError";
+import GeniallyName from "@domain/GeniallyName";
+import GeniallyDescription from "@domain/GeniallyDescription";
+import GeniallyAlreadyDeleted from "@domain/exception/GeniallyAlreadyDeleted";
 
 export default class Genially {
   private readonly _id: string;

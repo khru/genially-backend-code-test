@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import DeleteGeniallyService from "../../contexts/core/genially/application/DeleteGeniallyService";
-import GeniallyNotExist from "../../contexts/core/genially/domain/exception/GeniallyNotExist";
-import GeniallyAlreadyDeleted from "../../contexts/core/genially/domain/exception/GeniallyAlreadyDeleted";
+import DeleteGeniallyService from "@application/DeleteGeniallyService";
+import GeniallyNotExist from "@domain/exception/GeniallyNotExist";
+import GeniallyAlreadyDeleted from "@domain/exception/GeniallyAlreadyDeleted";
 
 export function deleteGeniallyControllerFactory(service: DeleteGeniallyService) {
   return async (request: Request, response: Response) => {

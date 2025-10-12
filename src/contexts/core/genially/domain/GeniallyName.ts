@@ -1,4 +1,4 @@
-import { InvalidGeniallyNameError } from "./exception/InvalidGeniallyNameError";
+import { InvalidGeniallyNameError } from "@domain/exception/InvalidGeniallyNameError";
 
 export default class GeniallyName {
   private readonly _emptyLength = 0;

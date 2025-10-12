@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "module": "commonjs",
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "target": "es6",
@@ -10,8 +11,31 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "*": ["node_modules/*"]
+      "@src/*": [
+        "src/*"
+      ],
+      "@api/*": [
+        "src/api/*"
+      ],
+      "@controllers/*": [
+        "src/api/controllers/*"
+      ],
+      "@contexts/*": [
+        "src/contexts/*"
+      ],
+      "@application/*": [
+        "src/contexts/core/genially/application/*"
+      ],
+      "@domain/*": [
+        "src/contexts/core/genially/domain/*"
+      ],
+      "@infrastructure/*": [
+        "src/contexts/core/genially/infrastructure/*"
+      ],
+      "@tests/*": [
+        "tests/*"
+      ]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "tests/**/*"]
 }

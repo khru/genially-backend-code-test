@@ -6,8 +6,12 @@ import swaggerUi from "swagger-ui-express";
 import { openApiDocument } from "./docs/openapi";
 
 // Controllers (route handlers)
-import * as healthController from "./controllers/health";
-import { createGeniallyController, deleteGeniallyController, renameGeniallyController } from "./dependency-injection";
+import * as healthController from "@controllers/health";
+import {
+  createGeniallyController,
+  deleteGeniallyController,
+  renameGeniallyController
+} from "@api/dependency-injection";
 
 // Create Express server
 const app = express();
