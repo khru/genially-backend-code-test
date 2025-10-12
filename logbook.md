@@ -73,3 +73,7 @@ thought process.
 
 I've added OpenAPI to the project because I think it could be an important part of the use of an API, obviously this is
 not part of the interview, so I just added because it was part of my thought process.
+
+## Added Makefile
+
+Due to the mongo-migration "project" this could impact the DX of the project, so I've added a Makefile to simplify
