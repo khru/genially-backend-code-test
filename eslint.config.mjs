@@ -27,7 +27,8 @@ export default [
       "coverage/**",
       "**/*.d.ts",
       "src/public/**",
-      "src/types/**"
+      "src/types/**",
+      "mongo-migrations/**",
     ],
   },
 ];

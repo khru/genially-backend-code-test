@@ -29,7 +29,6 @@ coverage
 mongo-migrations/.env
 mongo-migrations/.env.local
 mongo-migrations/node_modules
-mongo-migrations/
 
 
 # local env files
