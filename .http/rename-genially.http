@@ -1,6 +1,6 @@
 ### File: .http/rename-genially.http
-@idToRename = {{$random.idNumber.valid}}
-@unknownId = {{$random.idNumber.valid}}
+@idToRename = {{$random.uuid}}
+@unknownId = {{$random.uuid}}
 
 ### Fixture: create a genially to be renamed
 POST {{baseUrl}}/genially

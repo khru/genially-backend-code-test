@@ -1,30 +1,10 @@
-// migrations/XXXXXXXXXXXXXX-seed-geniallies-objectid.js
-// @ts-check
-
-const crypto = require('crypto');
-
-/**
- * Turn a UUID-like string into a stable ObjectId:
- *  - if hex with hyphens -> strip hyphens, take first 24 hex
- *  - else sha1(string), take first 24 hex
- */
-function toObjectIdHex(uuidLike) {
-  const compact = String(uuidLike).replace(/-/g, '').toLowerCase();
-  const hex24 = /^[0-9a-f]+$/.test(compact)
-    ? compact.slice(0, 24).padEnd(24, '0')
-    : crypto.createHash('sha1').update(String(uuidLike)).digest('hex').slice(0, 24);
-  return hex24;
-}
-
 module.exports = {
   /**
    * @param {import('mongodb').Db} db
    */
   async up(db) {
-    const { ObjectId } = require('mongodb');
-
     /** @type {import('mongodb').Collection<{
-     *  _id: import('mongodb').ObjectId,
+     *  _id: string,
      *  name: string,
      *  description?: string,
      *  createdAt: Date,
@@ -33,7 +13,7 @@ module.exports = {
      * }>} */
     const col = db.collection('geniallies');
 
-    const dateFromEpocMilliseconds = (ms) => new Date(Number(ms)); // epoch millis → Date
+    const dateFromEpocMilliseconds = (ms) => new Date(Number(ms));
 
     const geniallies = [
       {
@@ -146,31 +126,26 @@ module.exports = {
       },
     ];
 
-    const docs = geniallies.map((genially) => {
-      const objectIdHex = toObjectIdHex(genially.id);
-      return {
-        _id: new ObjectId(objectIdHex),
-        name: genially.name,
-        description: genially.description,
-        createdAt: dateFromEpocMilliseconds(genially.createdAt),
-        ...(genially.modifiedAt ? { modifiedAt: dateFromEpocMilliseconds(genially.modifiedAt) } : {}),
-        ...(genially.deletedAt ? { deletedAt: dateFromEpocMilliseconds(genially.deletedAt) } : {}),
-      };
-    });
+    const docs = geniallies.map((genially) => ({
+      _id: genially.id,
+      name: genially.name,
+      ...(genially.description != null ? { description: genially.description } : {}),
+      createdAt: dateFromEpocMilliseconds(genially.createdAt),
+      ...(genially.modifiedAt ? { modifiedAt: dateFromEpocMilliseconds(genially.modifiedAt) } : {}),
+      ...(genially.deletedAt ? { deletedAt: dateFromEpocMilliseconds(genially.deletedAt) } : {}),
+    }));
 
     const ops = docs.map((doc) => ({
       replaceOne: { filter: { _id: doc._id }, replacement: doc, upsert: true },
     }));
 
-    await col.bulkWrite(ops, { ordered: false });
+    await col.bulkWrite(ops, { ordered: true });
   },
 
   /**
    * @param {import('mongodb').Db} db
    */
   async down(db) {
-    const { ObjectId } = require('mongodb');
-
     const ids = [
       'b3f94e2a-0f9a-4d2a-9e83-3dca7f9b1c21',
       '2d6c3e7b-5f19-4caa-8e2c-9270c8d9fa45',
@@ -187,7 +162,7 @@ module.exports = {
       '5f4d3c2b-1a0e-4b7c-9d8e-7f6a5b4c3d2e',
       '3e2d1c0b-9a8f-4e7d-8c6b-5a4f3e2d1c0b',
       '8a7b6c5d-4e3f-4a2b-9c8d-7e6f5d4c3b2a',
-    ].map((s) => new ObjectId(toObjectIdHex(s)));
+    ];
 
     await db.collection('geniallies').deleteMany({ _id: { $in: ids } });
   },

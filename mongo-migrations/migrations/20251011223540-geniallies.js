@@ -9,30 +9,12 @@ module.exports = {
         required: ['_id', 'name', 'createdAt'],
         additionalProperties: false,
         properties: {
-          _id: {
-            bsonType: 'objectId',
-            description: 'Mongo ObjectId as primary key',
-          },
-          name: {
-            bsonType: 'string',
-            description: 'Genially name',
-          },
-          description: {
-            bsonType: 'string',
-            description: 'Genially description',
-          },
-          createdAt: {
-            bsonType: 'date',
-            description: 'Creation timestamp',
-          },
-          modifiedAt: {
-            bsonType: 'date',
-            description: 'Last modification timestamp',
-          },
-          deletedAt: {
-            bsonType: 'date',
-            description: 'Soft delete timestamp',
-          },
+          _id: { bsonType: 'string', description: 'Domain id stored as Mongo _id (string UUID)' },
+          name: { bsonType: 'string', description: 'Genially name' },
+          description: { bsonType: ['string', 'null'], description: 'Genially description' },
+          createdAt: { bsonType: 'date', description: 'Creation timestamp' },
+          modifiedAt: { bsonType: ['date', 'null'], description: 'Last modification timestamp' },
+          deletedAt: { bsonType: ['date', 'null'], description: 'Soft delete timestamp' },
         },
       },
     };

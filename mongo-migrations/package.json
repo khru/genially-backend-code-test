@@ -7,7 +7,7 @@
     "create": "migrate-mongo create",
     "migrate": "migrate-mongo up",
     "down": "migrate-mongo down",
-    "down:all": "migrate-mongo down -b",
+    "down:all": "migrate-mongo down -b -- --env-file=.env.local",
     "status": "migrate-mongo status",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

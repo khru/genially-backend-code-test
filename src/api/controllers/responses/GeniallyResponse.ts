@@ -1,4 +1,4 @@
-import Genially from "@domain/Genially";
+import Genially from '@domain/Genially';
 
 export type GeniallyResponse = {
   id: string;
@@ -16,6 +16,6 @@ export function createGeniallyResponse(genially: Genially): GeniallyResponse {
     description: genially.description,
     createdAt: genially.createdAt,
     modifiedAt: genially.modifiedAt || null,
-    deletedAt: genially.deletedAt || null
+    deletedAt: genially.deletedAt || null,
   } as GeniallyResponse;
 }

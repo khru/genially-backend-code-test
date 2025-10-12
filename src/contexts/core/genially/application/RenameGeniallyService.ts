@@ -1,5 +1,5 @@
-import Genially from "@domain/Genially";
-import GeniallyRepository from "@domain/GeniallyRepository";
+import Genially from '@domain/Genially';
+import GeniallyRepository from '@domain/GeniallyRepository';
 
 class RenameGeniallyRequest {
   id: string;
@@ -7,8 +7,7 @@ class RenameGeniallyRequest {
 }
 
 export default class RenameGeniallyService {
-  constructor(private readonly geniallyRepository: GeniallyRepository) {
-  }
+  constructor(private readonly geniallyRepository: GeniallyRepository) {}
 
   public async execute(request: RenameGeniallyRequest): Promise<Genially> {
     const existingGenially = await this.geniallyRepository.find(request.id);

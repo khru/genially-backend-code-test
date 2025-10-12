@@ -1,11 +1,17 @@
-import request from "supertest";
-import app from "../../src/api/app";
+import request from 'supertest';
+import { createConfiguredApp } from '@api/create-configured-app';
 
 let agent: ReturnType<typeof request.agent>;
 
 export async function getAgent() {
-  if (!agent) {
-    agent = request.agent(app);
+  const { app, close } = await createConfiguredApp();
+  try {
+    if (!agent) {
+      agent = request.agent(app);
+    }
+    return agent;
+  } catch (error) {
+    console.error('Error during the creation of the agent:', error);
+    await close();
   }
-  return agent;
 }

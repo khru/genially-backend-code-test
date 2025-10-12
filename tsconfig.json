@@ -11,30 +11,15 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "@src/*": [
-        "src/*"
-      ],
-      "@api/*": [
-        "src/api/*"
-      ],
-      "@controllers/*": [
-        "src/api/controllers/*"
-      ],
-      "@contexts/*": [
-        "src/contexts/*"
-      ],
-      "@application/*": [
-        "src/contexts/core/genially/application/*"
-      ],
-      "@domain/*": [
-        "src/contexts/core/genially/domain/*"
-      ],
-      "@infrastructure/*": [
-        "src/contexts/core/genially/infrastructure/*"
-      ],
-      "@tests/*": [
-        "tests/*"
-      ]
+      "@src/*": ["src/*"],
+      "@api/*": ["src/api/*"],
+      "@controllers/*": ["src/api/controllers/*"],
+      "@contexts/*": ["src/contexts/*"],
+      "@application/*": ["src/contexts/core/genially/application/*"],
+      "@domain/*": ["src/contexts/core/genially/domain/*"],
+      "@infrastructure/*": ["src/contexts/core/genially/infrastructure/*"],
+      "@configuration/*": ["src/api/configuration/*"],
+      "@tests/*": ["tests/*"]
     }
   },
   "include": ["src/**/*", "tests/**/*"]

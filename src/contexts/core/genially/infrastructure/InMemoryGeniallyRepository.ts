@@ -1,6 +1,6 @@
-import Genially from "@domain/Genially";
-import GeniallyRepository from "@domain/GeniallyRepository";
-import GeniallyNotExist from "@domain/exception/GeniallyNotExist";
+import Genially from '@domain/Genially';
+import GeniallyRepository from '@domain/GeniallyRepository';
+import GeniallyNotExist from '@domain/exception/GeniallyNotExist';
 
 export default class InMemoryGeniallyRepository implements GeniallyRepository {
   private geniallys: Genially[] = [];

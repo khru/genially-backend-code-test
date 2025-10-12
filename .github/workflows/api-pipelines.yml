@@ -1,40 +1,40 @@
 name: Genially pipelines - API
 on:
-  workflow_dispatch:
-  push:
-    branches: [ main ]
+    workflow_dispatch:
+    push:
+        branches: [main]
 
 permissions:
-  contents: read
-  packages: write
+    contents: read
+    packages: write
 
 jobs:
-  build-genially-api:
-    runs-on:
-      - ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    build-genially-api:
+        runs-on:
+            - ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
 
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+            - name: Use Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
 
-      - name: Install dependencies
-        run: npm install
+            - name: Install dependencies
+              run: npm install
 
-      - name: Build project
-        run: npm run build
+            - name: Build project
+              run: npm run build
 
-      - name: Run ESLint
-        run: npx eslint .
+            - name: Run ESLint
+              run: npx eslint .
 
-      - name: Run tests
-        run: npm run test:coverage
+            - name: Run tests
+              run: npm run test:coverage
 
-      - name: Upload genially api build
-        uses: actions/upload-artifact@v4
-        with:
-          name: genially-api
-          path: dist/
+            - name: Upload genially api build
+              uses: actions/upload-artifact@v4
+              with:
+                  name: genially-api
+                  path: dist/

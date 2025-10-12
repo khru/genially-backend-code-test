@@ -21,7 +21,7 @@ The development has already started but our teammate has gone on a well-deserved
 work, implementing some features defined by our product team. Fortunately, our team documented the project structure:
 
 | Name                           | Description                                                                                                                                             |
-|--------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **src**                        | Contains source code that will be compiled to the dist dir                                                                                              |
 | **src/api**                    | Contains source code related to express api                                                                                                             |
 | **src/api**/server.ts          | Entry point to express api                                                                                                                              |
@@ -37,7 +37,7 @@ work, implementing some features defined by our product team. Fortunately, our t
 Additionally, each module of a bounded context is organized in different layers:
 
 | Name               | Description                                                                                        |
-|--------------------|----------------------------------------------------------------------------------------------------|
+| ------------------ | -------------------------------------------------------------------------------------------------- |
 | **application**    | Contains application services (i.e. use cases) that communicate with our domain                    |
 | **domain**         | Contains building blocks that conform our domain                                                   |
 | **infrastructure** | Contains artifacts that interact with external world, such as a particular database or web service |
@@ -54,7 +54,6 @@ stages for this test.
 
 - **Create a new genially**: You have to create a new endpoint to enable the creation of new geniallys in our platform.
   There are some constraints to consider:
-
   - The name of a genially cannot be empty and its length has to be from 3 to 20 characters.
   - The description of a genially is limited to 125 characters.
 
@@ -144,10 +143,25 @@ NODE_PORT=3000
 NODE_ENV=development
 
 # Mongo
+MONGO_URI=mongodb://genially_user:supersecurepassword@localhost:27017/genially?authSource=admin
 MONGO_CONTAINER_NAME=genially-db
 MONGO_VERSION=8.0.12
 MONGO_PORT=27017
 MONGO_DATABASE=genially
+MONGO_COLLECTION=geniallies
 MONGO_USERNAME=genially_user
 MONGO_PASSWORD=supersecurepassword
+MONGO_HOST=localhost
+MONGO_AUTH_SOURCE=admin
+
+# App configuration
+# memory | mongo
+PERSISTENCE=memory
+
+```
+
+## Pings to mongo
+
+```bash
+mongosh "mongodb://genially_user:supersecurepassword@localhost:27017/genially?authSource=admin" --eval 'db.runCommand({ping:1})'
 ```

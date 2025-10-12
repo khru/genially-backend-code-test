@@ -3,7 +3,7 @@ POST {{baseUrl}}/genially
 Content-Type: application/json
 
 {
-  "id": "{{$random.idNumber.valid}}",
+  "id": "{{$random.uuid}}",
   "name": "{{$random.alphabetic(15)}}",
   "description": "{{$random.alphabetic(100)}}"
 }
@@ -19,7 +19,7 @@ POST {{baseUrl}}/genially
 Content-Type: application/json
 
 {
-  "id": "{{$random.idNumber.valid}}",
+  "id": "{{$random.uuid}}",
   "name": "{{$random.alphabetic(3)}}",
   "description": "{{$random.alphabetic(100)}}"
 }
@@ -34,7 +34,7 @@ POST {{baseUrl}}/genially
 Content-Type: application/json
 
 {
-  "id": "{{$random.idNumber.valid}}",
+  "id": "{{$random.uuid}}",
   "name": "{{$random.alphabetic(15)}}",
   "description": "{{$random.alphabetic(125)}}"
 }
@@ -49,7 +49,7 @@ POST {{baseUrl}}/genially
 Content-Type: application/json
 
 {
-  "id": "{{$random.idNumber.valid}}",
+  "id": "{{$random.uuid}}",
   "name": "{{$random.alphabetic(2)}}",
   "description": "{{$random.alphabetic(126)}}"
 }

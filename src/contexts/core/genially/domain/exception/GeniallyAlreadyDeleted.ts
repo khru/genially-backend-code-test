@@ -1,5 +1,5 @@
 export default class GeniallyAlreadyDeleted extends Error {
   constructor(id: string) {
-    super(`Genially <${id}> does no exist`);
+    super(`Genially <${id}> is already deleted`);
   }
 }

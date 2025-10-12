@@ -1,4 +1,4 @@
-import { InvalidGeniallyDescriptionError } from "@domain/exception/InvalidGeniallyDescriptionError";
+import { InvalidGeniallyDescriptionError } from '@domain/exception/InvalidGeniallyDescriptionError';
 
 export default class GeniallyDescription {
   private readonly _maxLength = 125;
@@ -15,5 +15,4 @@ export default class GeniallyDescription {
       throw new InvalidGeniallyDescriptionError(`Description cannot exceed ${this._maxLength} characters`);
     }
   }
-
 }

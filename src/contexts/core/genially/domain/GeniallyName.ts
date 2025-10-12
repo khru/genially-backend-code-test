@@ -1,4 +1,4 @@
-import { InvalidGeniallyNameError } from "@domain/exception/InvalidGeniallyNameError";
+import { InvalidGeniallyNameError } from '@domain/exception/InvalidGeniallyNameError';
 
 export default class GeniallyName {
   private readonly _emptyLength = 0;
@@ -15,13 +15,15 @@ export default class GeniallyName {
 
   private throwInvalidNameLength(name: string) {
     if (name.length < this._minLength || name.length > this._maxLength) {
-      throw new InvalidGeniallyNameError(`Name must have at least a length between ${this._minLength} and ${this._maxLength} characters`);
+      throw new InvalidGeniallyNameError(
+        `Name must have at least a length between ${this._minLength} and ${this._maxLength} characters`,
+      );
     }
   }
 
   private throwEmptyNameException(name: string) {
     if (!name || name.trim().length === this._emptyLength) {
-      throw new InvalidGeniallyNameError("Name cannot be empty");
+      throw new InvalidGeniallyNameError('Name cannot be empty');
     }
   }
 }
