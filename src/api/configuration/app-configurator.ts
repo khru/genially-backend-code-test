@@ -1,12 +1,12 @@
-import GeniallyRepository from '@domain/GeniallyRepository';
-import InMemoryGeniallyRepository from '@infrastructure/InMemoryGeniallyRepository';
+import GeniallyRepository from "@domain/GeniallyRepository";
+import InMemoryGeniallyRepository from "@infrastructure/InMemoryGeniallyRepository";
 
-import MongoGeniallyRepository from '@infrastructure/MongoGeniallyRepository';
-import { AppConfig } from '@configuration/app-config';
-import { PersistenceTypes } from '@configuration/persistence-types';
+import MongoGeniallyRepository from "@infrastructure/MongoGeniallyRepository";
+import { AppConfig } from "@configuration/app-config";
+import { PersistenceTypes } from "@configuration/persistence-types";
 
-type MongoClient = import('mongodb').MongoClient;
-type Db = import('mongodb').Db;
+type MongoClient = import("mongodb").MongoClient;
+type Db = import("mongodb").Db;
 
 export class AppConfigurator {
   private readonly config: AppConfig;
@@ -26,24 +26,20 @@ export class AppConfigurator {
     this.initialized = true;
 
     if (this.config.persistence !== PersistenceTypes.MONGO) {
-      console.log('[startup] DB: InMemory');
       return;
     }
 
-    const { MongoClient } = await import('mongodb');
+    const {MongoClient} = await import("mongodb");
     this.client = new MongoClient(this.config.database.uri);
     await this.client.connect();
     this.db = this.client.db(this.config.database.dbName);
-    console.log(
-      `[startup] DB: MongoDB → ${this.config.database.uri} (db="${this.config.database.dbName}", collection="${this.config.database.collection}")`,
-    );
   }
 
   getGeniallyRepository(): GeniallyRepository {
     if (this.geniallyRepository) return this.geniallyRepository;
 
     if (this.isMongoConfigured()) {
-      if (!this.db) throw new Error('Mongo not initialized. Call init() first.');
+      if (!this.db) throw new Error("Mongo not initialized. Call init() first.");
       this.geniallyRepository = new MongoGeniallyRepository(this.db, this.config.database.collection);
       return this.geniallyRepository;
     }
