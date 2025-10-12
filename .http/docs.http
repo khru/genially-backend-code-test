@@ -1,0 +1,5 @@
+### OpenAPI JSON
+GET {{baseUrl}}/openapi.json
+
+### Swagger UI
+GET {{baseUrl}}/docs

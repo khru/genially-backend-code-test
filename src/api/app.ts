@@ -2,6 +2,8 @@ import bodyParser from "body-parser";
 import compression from "compression";
 import express from "express";
 import lusca from "lusca";
+import swaggerUi from "swagger-ui-express";
+import { openApiDocument } from "./docs/openapi";
 
 // Controllers (route handlers)
 import * as healthController from "./controllers/health";
@@ -23,5 +25,9 @@ app.get("/", healthController.check);
 app.post("/genially", createGeniallyController);
 app.delete("/genially/:id", deleteGeniallyController);
 app.patch("/genially/:id", renameGeniallyController);
+
+// OpenAPI routes
+app.get("/openapi.json", (_request, response) => response.json(openApiDocument));
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));
 
 export default app;

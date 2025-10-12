@@ -24,3 +24,13 @@ yarn-error.log*
 
 .idea
 coverage
+
+# Local files to have migrations on MongoDB on local machine
+mongo-migrations/.env
+mongo-migrations/.env.local
+mongo-migrations/node_modules
+mongo-migrations/
+
+
+# local env files
+.env
