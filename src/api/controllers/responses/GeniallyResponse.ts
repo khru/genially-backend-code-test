@@ -1,4 +1,4 @@
-import Genially from '@domain/Genially';
+import Genially from "@domain/Genially";
 
 export type GeniallyResponse = {
   id: string;

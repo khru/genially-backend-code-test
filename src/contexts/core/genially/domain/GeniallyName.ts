@@ -1,4 +1,4 @@
-import { InvalidGeniallyNameError } from '@domain/exception/InvalidGeniallyNameError';
+import { InvalidGeniallyNameError } from "@domain/exception/InvalidGeniallyNameError";
 
 export default class GeniallyName {
   private readonly _emptyLength = 0;
@@ -23,7 +23,7 @@ export default class GeniallyName {
 
   private throwEmptyNameException(name: string) {
     if (!name || name.trim().length === this._emptyLength) {
-      throw new InvalidGeniallyNameError('Name cannot be empty');
+      throw new InvalidGeniallyNameError("Name cannot be empty");
     }
   }
 }

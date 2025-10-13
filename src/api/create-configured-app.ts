@@ -19,14 +19,14 @@ export async function createConfiguredApp(config?: AppConfig) {
 
   const repository = configurator.getGeniallyRepository();
   console.log("[DB] Repository:", repository.constructor.name);
-  const {createGeniallyController, deleteGeniallyController, renameGeniallyController} =
+  const { createGeniallyController, deleteGeniallyController, renameGeniallyController } =
     composeControllers(repository);
 
   const app = express();
   app.set("port", process.env.PORT || 3000);
   app.use(compression());
   app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({extended: true}));
+  app.use(bodyParser.urlencoded({ extended: true }));
   app.use(lusca.xframe("SAMEORIGIN"));
   app.use(lusca.xssProtection(true));
 

@@ -1,7 +1,7 @@
-import GeniallyValidationError from '@domain/exception/GeniallyValidationError';
-import GeniallyName from '@domain/GeniallyName';
-import GeniallyDescription from '@domain/GeniallyDescription';
-import GeniallyAlreadyDeleted from '@domain/exception/GeniallyAlreadyDeleted';
+import GeniallyValidationError from "@domain/exception/GeniallyValidationError";
+import GeniallyName from "@domain/GeniallyName";
+import GeniallyDescription from "@domain/GeniallyDescription";
+import GeniallyAlreadyDeleted from "@domain/exception/GeniallyAlreadyDeleted";
 
 export type UpdatableGenially = {
   id: string;

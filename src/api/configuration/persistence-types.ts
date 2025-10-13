@@ -1,4 +1,4 @@
 export enum PersistenceTypes {
-  MONGO = 'mongo',
-  MEMORY = 'memory',
+  MONGO = "mongo",
+  MEMORY = "memory",
 }

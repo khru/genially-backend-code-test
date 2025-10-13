@@ -4,7 +4,7 @@ export function getError<T extends Error>(fn: () => unknown): T {
   } catch (e) {
     return e as T;
   }
-  throw new Error('Expected function to throw');
+  throw new Error("Expected function to throw");
 }
 
 export async function getAsyncError<T extends Error>(fn: () => Promise<unknown>): Promise<T> {
@@ -13,5 +13,5 @@ export async function getAsyncError<T extends Error>(fn: () => Promise<unknown>)
   } catch (e) {
     return e as T;
   }
-  throw new Error('Expected function to throw');
+  throw new Error("Expected function to throw");
 }

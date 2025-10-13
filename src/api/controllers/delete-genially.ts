@@ -1,7 +1,7 @@
-import { Request, Response } from 'express';
-import DeleteGeniallyService from '@application/DeleteGeniallyService';
-import GeniallyNotExist from '@domain/exception/GeniallyNotExist';
-import GeniallyAlreadyDeleted from '@domain/exception/GeniallyAlreadyDeleted';
+import { Request, Response } from "express";
+import DeleteGeniallyService from "@application/DeleteGeniallyService";
+import GeniallyNotExist from "@domain/exception/GeniallyNotExist";
+import GeniallyAlreadyDeleted from "@domain/exception/GeniallyAlreadyDeleted";
 
 export function deleteGeniallyControllerFactory(service: DeleteGeniallyService) {
   return async (request: Request, response: Response) => {
@@ -16,7 +16,7 @@ export function deleteGeniallyControllerFactory(service: DeleteGeniallyService) 
       if (error instanceof GeniallyAlreadyDeleted) {
         return response.status(412).json({ error: error.message });
       }
-      return response.status(500).json({ error: 'Internal server error' });
+      return response.status(500).json({ error: "Internal server error" });
     }
   };
 }

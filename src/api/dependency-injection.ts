@@ -1,10 +1,10 @@
-import InMemoryGeniallyRepository from '@infrastructure/InMemoryGeniallyRepository';
-import CreateGeniallyService from '@application/CreateGeniallyService';
-import { createGeniallyControllerFactory } from '@controllers/create-genially';
-import DeleteGeniallyService from '@application/DeleteGeniallyService';
-import { deleteGeniallyControllerFactory } from '@controllers/delete-genially';
-import RenameGeniallyService from '@application/RenameGeniallyService';
-import { renameGeniallyControllerFactory } from '@controllers/rename-genially';
+import InMemoryGeniallyRepository from "@infrastructure/InMemoryGeniallyRepository";
+import CreateGeniallyService from "@application/CreateGeniallyService";
+import { createGeniallyControllerFactory } from "@controllers/create-genially";
+import DeleteGeniallyService from "@application/DeleteGeniallyService";
+import { deleteGeniallyControllerFactory } from "@controllers/delete-genially";
+import RenameGeniallyService from "@application/RenameGeniallyService";
+import { renameGeniallyControllerFactory } from "@controllers/rename-genially";
 
 // Repositories
 const geniallyRepository = new InMemoryGeniallyRepository();

@@ -1,10 +1,10 @@
-import type { AppConfig, PersistenceType } from '@configuration/app-config';
-import { DEFAULTS, Env, EnvVar } from '@configuration/env';
-import { PersistenceTypes } from '@configuration/persistence-types';
+import type { AppConfig, PersistenceType } from "@configuration/app-config";
+import { DEFAULTS, Env, EnvVar } from "@configuration/env";
+import { PersistenceTypes } from "@configuration/persistence-types";
 
 export class ConfigFactory {
-  private static readonly _emptyString = '';
-  private static readonly _stringType = 'string';
+  private static readonly _emptyString = "";
+  private static readonly _stringType = "string";
 
   private static readKnown(sourceEnv: Env, key: EnvVar): string | undefined {
     return sourceEnv[key];

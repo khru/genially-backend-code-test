@@ -1,4 +1,4 @@
-import { InvalidGeniallyDescriptionError } from '@domain/exception/InvalidGeniallyDescriptionError';
+import { InvalidGeniallyDescriptionError } from "@domain/exception/InvalidGeniallyDescriptionError";
 
 export default class GeniallyDescription {
   private readonly _maxLength = 125;

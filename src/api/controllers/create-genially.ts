@@ -1,8 +1,8 @@
-import { Request, Response } from 'express';
-import CreateGeniallyService from '@application/CreateGeniallyService';
-import Genially from '@domain/Genially';
-import GeniallyValidationError from '@domain/exception/GeniallyValidationError';
-import { createGeniallyResponse, GeniallyResponse } from '@controllers/responses/GeniallyResponse';
+import { Request, Response } from "express";
+import CreateGeniallyService from "@application/CreateGeniallyService";
+import Genially from "@domain/Genially";
+import GeniallyValidationError from "@domain/exception/GeniallyValidationError";
+import { createGeniallyResponse, GeniallyResponse } from "@controllers/responses/GeniallyResponse";
 
 export function createGeniallyControllerFactory(createGeniallyService: CreateGeniallyService) {
   return async (request: Request, response: Response) => {
@@ -19,7 +19,7 @@ export function createGeniallyControllerFactory(createGeniallyService: CreateGen
     try {
       const genially: Genially = await createGeniallyService.execute(request.body);
       const geniallyResponse: GeniallyResponse = createGeniallyResponse(genially);
-      response.status(201).contentType('application/json').send(geniallyResponse);
+      response.status(201).contentType("application/json").send(geniallyResponse);
     } catch (error) {
       if (error instanceof GeniallyValidationError) {
         return response.status(400).json({
@@ -29,7 +29,7 @@ export function createGeniallyControllerFactory(createGeniallyService: CreateGen
       }
 
       return response.status(500).json({
-        error: 'Internal server error',
+        error: "Internal server error",
       });
     }
   };

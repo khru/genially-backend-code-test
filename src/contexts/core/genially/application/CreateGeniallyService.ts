@@ -1,5 +1,5 @@
-import Genially from '@domain/Genially';
-import GeniallyRepository from '@domain/GeniallyRepository';
+import Genially from "@domain/Genially";
+import GeniallyRepository from "@domain/GeniallyRepository";
 
 type CreateGeniallyServiceRequest = {
   id: string;

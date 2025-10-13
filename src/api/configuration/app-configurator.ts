@@ -29,7 +29,7 @@ export class AppConfigurator {
       return;
     }
 
-    const {MongoClient} = await import("mongodb");
+    const { MongoClient } = await import("mongodb");
     this.client = new MongoClient(this.config.database.uri);
     await this.client.connect();
     this.db = this.client.db(this.config.database.dbName);

@@ -1,7 +1,7 @@
-import type { Collection, Db } from 'mongodb';
-import Genially from '@domain/Genially';
-import GeniallyRepository from '@domain/GeniallyRepository';
-import GeniallyNotExist from '@domain/exception/GeniallyNotExist';
+import type { Collection, Db } from "mongodb";
+import Genially from "@domain/Genially";
+import GeniallyRepository from "@domain/GeniallyRepository";
+import GeniallyNotExist from "@domain/exception/GeniallyNotExist";
 
 type GeniallyDoc = {
   _id: string;
@@ -15,7 +15,7 @@ type GeniallyDoc = {
 export default class MongoGeniallyRepository implements GeniallyRepository {
   private readonly geniallyCollection: Collection<GeniallyDoc>;
 
-  constructor(db: Db, collectionName = 'geniallies') {
+  constructor(db: Db, collectionName = "geniallies") {
     this.geniallyCollection = db.collection<GeniallyDoc>(collectionName);
   }
 
