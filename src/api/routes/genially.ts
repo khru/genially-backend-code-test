@@ -5,4 +5,5 @@ export function registerGeniallyRoutes(app: Application, container: AwilixContai
   app.post("/genially", container.resolve("createGeniallyController"));
   app.patch("/genially/:id", container.resolve("renameGeniallyController"));
   app.delete("/genially/:id", container.resolve("deleteGeniallyController"));
+  app.get("/metrics/genially/created", container.resolve("getGeniallyCreatedCountController"));
 }

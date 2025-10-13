@@ -12,7 +12,7 @@ nvm use
 
 ## Standards on the project
 
-I've saw that there was not a `.editorconfig` and I added so the IDE knows the standards of the project.
+I've sawed that there was not a `.editorconfig` and I added so the IDE knows the standards of the project.
 
 ## Testing framework
 
@@ -36,15 +36,15 @@ Then I created and ADR to justify my decision.
 ## Making the first TDD cycle to create a genially
 
 I've created the first acceptance test, while I was working on it, I identify a bug on the InMemoryRepository as well as
-an unexpected behavior on it so I cover it with test and make the test, after that I've updated the test to cover the
+an unexpected behavior on it, so I cover it with test and make the test, after that I've updated the test to cover the
 behavior I change.
 
 From there I move to finish the "use case".
 
-## Adding http client for all the use cases
+## Adding an http client for all the use cases
 
-Being an API, is important to test the behaviors, having behaviors that are not simple to evaluate with the browser I've
-asked Moi and Noel about the IDE that the use and they mention that was WebStorm, so I decided to use the http client
+Being an API is important to test the behaviors, having behaviors that are not simple to evaluate with the browser I've
+asked Moi and Noel about the IDE that they use. They mention that was WebStorm, so I decided to use the http client
 from the IDE
 
 ## Finalizing the genially use cases for step 1
@@ -77,3 +77,37 @@ not part of the interview, so I just added because it was part of my thought pro
 ## Added Makefile
 
 Due to the mongo-migration "project" this could impact the DX of the project, so I've added a Makefile to simplify
+
+## Adding configuration pattern to allow multiple databases base on configuration
+
+I've added a configuration pattern to allow multiple databases based on configuration, this is important because
+it allows changing the database without changing the code, this is important because in a real project
+
+I've also seen that this could be maybe too complex, so I've decided to replace it with only one database connection
+with
+MongoDB.
+
+## Adding Dependency Injection container
+
+I've added a DI container to the project because I think it is important to have a way to manage dependencies, this is
+important because it allows changing the implementation of a dependency without changing the code, or as less as
+possible
+
+I've used `awilix` to avoid decorator with `@` and the magic that they can do, that can be confusing sometimes.
+
+I've migrated the code from a manual Configuration pattern to a DI container, and then I've remove the use of the two
+databases based on the configuration.
+
+## Move to the final stage
+
+I've just taken it as the low-hanging fruit, I've added some types to the project, as well as some final polish.
+
+I am also thinking of implementing it by using domain events, but I think that was not needed for the interview, or it
+could have been an overengineering.
+
+## Final thoughts
+
+I've like a lot the interview, I think that was a good experience, the only downside I've seen is that the behavior for
+the exercise is a simple CRUD, with no real business logic, that's why I've also taken some turns that I would not do
+it on a real project, like a better testing strategy, or using API first with OpenAPI, ensuring that domain objects are
+tighter to the domain and not to the infrastructure.

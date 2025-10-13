@@ -4,16 +4,16 @@ import type { AppConfig } from "@configuration/app-config";
 import { createConfiguredApp } from "@api/create-configured-app";
 
 let agent: ReturnType<typeof request.agent> | undefined;
-let mongod: MongoMemoryServer | null = null;
+let mongodb: MongoMemoryServer | null = null;
 let dispose: (() => Promise<void>) | null = null;
 
 export async function getAgent() {
   if (agent) return agent;
 
-  mongod = await MongoMemoryServer.create();
+  mongodb = await MongoMemoryServer.create();
   const appConfig: AppConfig = {
     database: {
-      uri: mongod.getUri(),
+      uri: mongodb.getUri(),
       dbName: "acceptance-tests",
       collection: "geniallies",
     },
@@ -31,9 +31,9 @@ export async function stopAgent() {
   } finally {
     dispose = null;
     agent = undefined;
-    if (mongod) {
-      await mongod.stop();
-      mongod = null;
+    if (mongodb) {
+      await mongodb.stop();
+      mongodb = null;
     }
   }
 }

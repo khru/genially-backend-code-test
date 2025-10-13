@@ -11,6 +11,8 @@ import RenameGeniallyService from "@application/RenameGeniallyService";
 import { createGeniallyControllerFactory } from "@controllers/create-genially";
 import { deleteGeniallyControllerFactory } from "@controllers/delete-genially";
 import { renameGeniallyControllerFactory } from "@controllers/rename-genially";
+import GeniallyCreatedCountService from "@application/GeniallyCreatedCountService";
+import { getGeniallyCreatedCountControllerFactory } from "@controllers/get-genially-created-count";
 
 type MongoClientT = import("mongodb").MongoClient;
 type DbT = import("mongodb").Db;
@@ -51,11 +53,13 @@ export async function buildContainer(config?: AppConfig): Promise<{
     createGeniallyService: asClass(CreateGeniallyService).scoped(),
     deleteGeniallyService: asClass(DeleteGeniallyService).scoped(),
     renameGeniallyService: asClass(RenameGeniallyService).scoped(),
+    geniallyCreatedCountService: asClass(GeniallyCreatedCountService).scoped(),
 
     // Controllers
     createGeniallyController: asFunction(createGeniallyControllerFactory).scoped(),
     deleteGeniallyController: asFunction(deleteGeniallyControllerFactory).scoped(),
     renameGeniallyController: asFunction(renameGeniallyControllerFactory).scoped(),
+    getGeniallyCreatedCountController: asFunction(getGeniallyCreatedCountControllerFactory).scoped(),
   });
 
   const dispose = async () => {

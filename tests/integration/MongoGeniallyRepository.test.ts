@@ -5,6 +5,7 @@ import Genially from "@domain/Genially";
 import GeniallyNotExist from "@domain/exception/GeniallyNotExist";
 import GeniallyAlreadyDeleted from "@domain/exception/GeniallyAlreadyDeleted";
 import MongoGeniallyRepository from "@infrastructure/MongoGeniallyRepository";
+import { GeniallyCount } from "@domain/GeniallyCount";
 
 describe("MongoGeniallyRepository", () => {
   let container: StartedTestContainer;
@@ -88,6 +89,40 @@ describe("MongoGeniallyRepository", () => {
 
       const geniallyFound = await mongoGeniallyRepository.find(id);
       expect(geniallyFound!.deletedAt).toBeInstanceOf(Date);
+    });
+
+    describe("countCreated", () => {
+      it("returns 0 when collection is empty", async () => {
+        expect(await mongoGeniallyRepository.countCreated()).toEqual(new GeniallyCount(0));
+      });
+
+      it("returns the number of documents after saving distinct ids", async () => {
+        await mongoGeniallyRepository.save(new Genially("fist-id", "first-name"));
+        await mongoGeniallyRepository.save(new Genially("second-id", "second-name"));
+
+        expect(await mongoGeniallyRepository.countCreated()).toEqual(new GeniallyCount(2));
+      });
+
+      it("does not decrease after a soft delete", async () => {
+        const id = "to-soft-delete";
+        await mongoGeniallyRepository.save(new Genially(id, "will be deleted"));
+
+        const before = await mongoGeniallyRepository.countCreated();
+        await mongoGeniallyRepository.delete(id);
+        const after = await mongoGeniallyRepository.countCreated();
+
+        expect(after).toEqual(before);
+      });
+
+      it("does not increase the count when updating the same id", async () => {
+        await mongoGeniallyRepository.save(new Genially("fist-id", "first-name"));
+        const before = await mongoGeniallyRepository.countCreated();
+
+        await mongoGeniallyRepository.save(new Genially("fist-id", "updated-name"));
+        const after = await mongoGeniallyRepository.countCreated();
+
+        expect(after).toEqual(before);
+      });
     });
   });
 });

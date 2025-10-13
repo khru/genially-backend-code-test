@@ -1,4 +1,4 @@
-import { getAgent, stopAgent } from "../helpers/http";
+import { getAgent, stopAgent } from "@tests/helpers/http";
 
 describe("Rename Genially Controller", () => {
   let agent: Awaited<ReturnType<typeof getAgent>>;
@@ -12,7 +12,10 @@ describe("Rename Genially Controller", () => {
   });
 
   it("PATCH /genially/:id renames an existing genially and sets modifiedAt (200)", async () => {
-    await agent.post("/genially").send({id: "rename-success-id", name: "Old Name", description: "ok"}).expect(201);
+    await agent
+      .post("/genially")
+      .send({id: "rename-success-id", name: "Old Name", description: "ok"})
+      .expect(201);
 
     const response = await agent
       .patch("/genially/rename-success-id")
@@ -78,9 +81,14 @@ describe("Rename Genially Controller", () => {
   });
 
   it("PATCH /genially/:id returns 412 when the genially is already deleted", async () => {
-    await agent.post("/genially").send({id: "rename-deleted-id", name: "Old Name"}).expect(201);
+    await agent
+      .post("/genially")
+      .send({id: "rename-deleted-id", name: "Old Name"})
+      .expect(201);
 
-    await agent.delete("/genially/rename-deleted-id").expect(204);
+    await agent
+      .delete("/genially/rename-deleted-id")
+      .expect(204);
 
     const response = await agent
       .patch("/genially/rename-deleted-id")

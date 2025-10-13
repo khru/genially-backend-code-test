@@ -2,6 +2,7 @@ import type { Collection, Db } from "mongodb";
 import Genially from "@domain/Genially";
 import GeniallyRepository from "@domain/GeniallyRepository";
 import GeniallyNotExist from "@domain/exception/GeniallyNotExist";
+import { GeniallyCount } from "@domain/GeniallyCount";
 
 type GeniallyDoc = {
   _id: string;
@@ -28,11 +29,11 @@ export default class MongoGeniallyRepository implements GeniallyRepository {
       modifiedAt: genially.modifiedAt ?? null,
       deletedAt: genially.deletedAt ?? null,
     };
-    await this.geniallyCollection.updateOne({ _id: doc._id }, { $set: doc }, { upsert: true });
+    await this.geniallyCollection.updateOne({_id: doc._id}, {$set: doc}, {upsert: true});
   }
 
   async find(id: string): Promise<Genially> {
-    const geniallyDocument = await this.geniallyCollection.findOne({ _id: id });
+    const geniallyDocument = await this.geniallyCollection.findOne({_id: id});
     if (!geniallyDocument) throw new GeniallyNotExist(id);
 
     return Genially.fromPrimitives({
@@ -49,5 +50,10 @@ export default class MongoGeniallyRepository implements GeniallyRepository {
     const genially = await this.find(id);
     genially.delete();
     await this.save(genially);
+  }
+
+  async countCreated(): Promise<GeniallyCount> {
+    const totalGeniallysCreated = await this.geniallyCollection.countDocuments({});
+    return new GeniallyCount(totalGeniallysCreated);
   }
 }

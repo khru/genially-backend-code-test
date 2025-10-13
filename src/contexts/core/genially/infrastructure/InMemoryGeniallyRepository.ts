@@ -1,6 +1,7 @@
 import Genially from "@domain/Genially";
 import GeniallyRepository from "@domain/GeniallyRepository";
 import GeniallyNotExist from "@domain/exception/GeniallyNotExist";
+import { GeniallyCount } from "../domain/GeniallyCount";
 
 export default class InMemoryGeniallyRepository implements GeniallyRepository {
   private geniallys: Genially[] = [];
@@ -22,6 +23,11 @@ export default class InMemoryGeniallyRepository implements GeniallyRepository {
     const genially = await this.find(id);
     genially.delete();
     await this.save(genially);
+  }
+
+  async countCreated(): Promise<GeniallyCount> {
+    const totalGeniallysCreated = this.geniallys.length;
+    return new GeniallyCount(totalGeniallysCreated);
   }
 
   private async hardDelete(id: string): Promise<void> {

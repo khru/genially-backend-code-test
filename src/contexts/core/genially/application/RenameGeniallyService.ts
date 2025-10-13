@@ -1,7 +1,7 @@
 import Genially from "@domain/Genially";
 import GeniallyRepository from "@domain/GeniallyRepository";
 
-class RenameGeniallyRequest {
+type RenameGeniallyRequest = {
   id: string;
   name: string;
 }

@@ -1,4 +1,4 @@
-Info:
+# Info:
 
 - status: approved
 
@@ -16,12 +16,10 @@ Info:
 2. **migrate-mongo (Node.js CLI)** (file-based JS/TS with `up/down`) ← best perceived DevEx
 3. **Mongock (code-first with annotations)** (not purely file-based, tightly integrated with Spring)
 
----
-
 ## Detailed Comparison (Trade-offs)
 
 | Criterion                   | Liquibase + Mongo                        | migrate-mongo (Node CLI)                       | Mongock (code-first)              |
-| --------------------------- | ---------------------------------------- | ---------------------------------------------- | --------------------------------- |
+|-----------------------------|------------------------------------------|------------------------------------------------|-----------------------------------|
 | **Type**                    | YAML/JSON/XML files                      | JS/TS files with `up/down`                     | Kotlin/Java code with annotations |
 | **Entity Decoupling**       | Total                                    | Total                                          | Partial (code-bound)              |
 | **History & Versioning**    | `DATABASECHANGELOG` + checksums          | Changelog collection (no checksums by default) | `mongockChangeLog`                |
@@ -34,8 +32,6 @@ Info:
 | **DevEx**                   | Good (YAML, preconditions, tooling)      | **Very high** (simple JS/TS `up/down`)         | Medium (code-bound)               |
 | **Learning Curve**          | Medium                                   | Low                                            | Low if familiar with Spring       |
 | **License**                 | Apache 2.0                               | MIT                                            | Apache 2.0                        |
-
----
 
 ## Decision
 
@@ -55,8 +51,6 @@ app starts.
 - **Lock library version** in `package.json` and use lockfile.
 - **No parallel execution**; one migration job per environment.
 
----
-
 ## Consequences
 
 **Positive**
@@ -69,8 +63,6 @@ app starts.
 
 - New **Node** dependency in the pipeline.
 - Risk of **parallel runs** if pipeline not designed correctly.
-
----
 
 ## Implementation Plan
 
@@ -110,8 +102,6 @@ app starts.
 
 - Procedure: stop app → `npx migrate-mongo down` (one or N) → restart app.
 - Note: many Mongo DDL operations **are not transactional**.
-
----
 
 ## Risks & Mitigations
 

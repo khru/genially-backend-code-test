@@ -1,0 +1,3 @@
+type GeniallyCountResponse = {
+  created: number;
+}

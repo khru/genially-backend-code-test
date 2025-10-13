@@ -2,6 +2,7 @@ import InMemoryGeniallyRepository from "../../src/contexts/core/genially/infrast
 import Genially from "../../src/contexts/core/genially/domain/Genially";
 import { getAsyncError } from "../helpers/ErrorHandler";
 import GeniallyNotExist from "../../src/contexts/core/genially/domain/exception/GeniallyNotExist";
+import { GeniallyCount } from "@domain/GeniallyCount";
 
 describe("InMemoryGeniallyRepository", () => {
   let repository: InMemoryGeniallyRepository;
@@ -55,4 +56,40 @@ describe("InMemoryGeniallyRepository", () => {
       expect(error.message).toContain(id);
     });
   });
+
+  describe("countCreated", () => {
+    it("should return 0 when repository is empty", async () => {
+      expect(await repository.countCreated()).toEqual(new GeniallyCount(0));
+    });
+
+    it("should return the number of saved geniallys (distinct ids)", async () => {
+      await repository.save(new Genially("first-id", "first-name"));
+      await repository.save(new Genially("second-id", "second-name"));
+
+      expect(await repository.countCreated()).toEqual(new GeniallyCount(2));
+    });
+
+    it("does not decrease after a soft delete", async () => {
+      const id = "id-soft-delete";
+      await repository.save(new Genially(id, "name to delete"));
+
+      const before = await repository.countCreated();
+      await repository.delete(id);
+      const after = await repository.countCreated();
+
+      expect(after).toEqual(before);
+    });
+
+    it("should not increase the counter when updating the same genially", async () => {
+      const id = "id-upsert";
+      await repository.save(new Genially(id, "first-name"));
+      const before = await repository.countCreated();
+
+      await repository.save(new Genially(id, "updated-name"));
+      const after = await repository.countCreated();
+
+      expect(after).toEqual(before);
+    });
+  });
+
 });

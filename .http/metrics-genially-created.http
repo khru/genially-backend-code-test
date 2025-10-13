@@ -1,0 +1,16 @@
+### Baseline: integer ≥ 0
+GET {{baseUrl}}/metrics/genially/created
+Content-Type: application/json
+
+> {%
+  client.test("200 JSON", () => {
+    client.assert(response.status === 200, `Expected 200 got ${response.status}`);
+    client.assert(response.contentType.mimeType === "application/json", "Expected JSON");
+  });
+
+  client.test("'created' is integer ≥ 0", () => {
+    client.assert(typeof response.body.created === "number", "'created' should be a number");
+    client.assert(Number.isInteger(response.body.created), "'created' should be an integer");
+    client.assert(response.body.created >= 0, "'created' should be ≥ 0");
+  });
+%}
