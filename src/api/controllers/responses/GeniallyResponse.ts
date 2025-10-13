@@ -13,7 +13,7 @@ export function createGeniallyResponse(genially: Genially): GeniallyResponse {
   return {
     id: genially.id,
     name: genially.name,
-    description: genially.description,
+    description: genially.description || null,
     createdAt: genially.createdAt,
     modifiedAt: genially.modifiedAt || null,
     deletedAt: genially.deletedAt || null,

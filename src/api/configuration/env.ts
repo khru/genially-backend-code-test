@@ -11,7 +11,6 @@ export enum EnvVar {
   MONGO_HOST = "MONGO_HOST",
   MONGO_COLLECTION = "MONGO_COLLECTION",
   MONGO_AUTH_SOURCE = "MONGO_AUTH_SOURCE",
-  PERSISTENCE = "PERSISTENCE",
 }
 
 export const DEFAULTS: Record<EnvVar, string> = {
@@ -25,5 +24,4 @@ export const DEFAULTS: Record<EnvVar, string> = {
   [EnvVar.MONGO_HOST]: "localhost",
   [EnvVar.MONGO_COLLECTION]: "geniallies",
   [EnvVar.MONGO_AUTH_SOURCE]: "admin",
-  [EnvVar.PERSISTENCE]: "memory",
 };

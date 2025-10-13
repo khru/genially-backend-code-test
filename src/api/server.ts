@@ -1,10 +1,9 @@
 import errorHandler from "errorhandler";
-import { createConfiguredApp } from "./create-configured-app";
+import { createConfiguredApp } from "@api/create-configured-app";
 
 (async () => {
   try {
-    console.log("Database connection:", process.env.PERSISTENCE);
-    const { app, close } = await createConfiguredApp();
+    const {app, close} = await createConfiguredApp();
 
     app.use(errorHandler());
 

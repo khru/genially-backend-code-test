@@ -1,5 +1,4 @@
-// tests/acceptance/DeleteGeniallyController.test.ts
-import { getAgent } from "../helpers/http";
+import { getAgent, stopAgent } from "../helpers/http";
 
 describe("Delete Genially Controller", () => {
   let agent: Awaited<ReturnType<typeof getAgent>>;
@@ -8,8 +7,12 @@ describe("Delete Genially Controller", () => {
     agent = await getAgent();
   });
 
+  afterAll(async () => {
+    await stopAgent();
+  });
+
   it("DELETE /genially/:id returns 204 when genially exists", async () => {
-    await agent.post("/genially").send({ id: "delete-success-id", name: "To delete", description: "ok" }).expect(201);
+    await agent.post("/genially").send({id: "delete-success-id", name: "To delete", description: "ok"}).expect(201);
 
     await agent.delete("/genially/delete-success-id").expect(204);
   });
@@ -22,7 +25,7 @@ describe("Delete Genially Controller", () => {
   });
 
   it("DELETE /genially/:id returns 412 when already deleted", async () => {
-    await agent.post("/genially").send({ id: "delete-already-deleted-id", name: "To delete twice" }).expect(201);
+    await agent.post("/genially").send({id: "delete-already-deleted-id", name: "To delete twice"}).expect(201);
 
     await agent.delete("/genially/delete-already-deleted-id").expect(204);
 

@@ -1,17 +1,39 @@
 import request from "supertest";
+import { MongoMemoryServer } from "mongodb-memory-server";
+import type { AppConfig } from "@configuration/app-config";
 import { createConfiguredApp } from "@api/create-configured-app";
 
-let agent: ReturnType<typeof request.agent>;
+let agent: ReturnType<typeof request.agent> | undefined;
+let mongod: MongoMemoryServer | null = null;
+let dispose: (() => Promise<void>) | null = null;
 
 export async function getAgent() {
-  const { app, close } = await createConfiguredApp();
+  if (agent) return agent;
+
+  mongod = await MongoMemoryServer.create();
+  const appConfig: AppConfig = {
+    database: {
+      uri: mongod.getUri(),
+      dbName: "acceptance-tests",
+      collection: "geniallies",
+    },
+  };
+
+  const {app, close} = await createConfiguredApp(appConfig);
+  dispose = close;
+  agent = request.agent(app);
+  return agent;
+}
+
+export async function stopAgent() {
   try {
-    if (!agent) {
-      agent = request.agent(app);
+    if (dispose) await dispose();
+  } finally {
+    dispose = null;
+    agent = undefined;
+    if (mongod) {
+      await mongod.stop();
+      mongod = null;
     }
-    return agent;
-  } catch (error) {
-    console.error("Error during the creation of the agent:", error);
-    await close();
   }
 }

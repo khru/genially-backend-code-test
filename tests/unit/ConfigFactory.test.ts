@@ -4,10 +4,9 @@ import type { Env } from "@configuration/env";
 describe("ConfigFactory.from", () => {
   const givenEnv = (partial: Partial<Env> = {}): Env => partial as Env;
 
-  it("returns memory persistence and builds local URI without credentials when env is empty", () => {
+  it("returns and builds local URI without credentials when env is empty", () => {
     const appConfig = configFrom(givenEnv());
     expect(appConfig).toEqual({
-      persistence: "memory",
       database: {
         uri: "mongodb://localhost:27017/genially",
         dbName: "genially",
@@ -29,7 +28,6 @@ describe("ConfigFactory.from", () => {
 
     expect(appConfig).toEqual(
       expect.objectContaining({
-        persistence: "memory",
         database: expect.objectContaining({
           uri: "mongodb://localhost:27017/genially",
           dbName: "genially",
@@ -181,32 +179,7 @@ describe("ConfigFactory.from", () => {
 
     expect(appConfig.database.uri).toBe("mongodb://user%40corp.com:p%40%24%24%3Aword@host:27017/d?authSource=admin");
   });
-
-  describe("persistence parsing", () => {
-    it("returns memory when PERSISTENCE is undefined", () => {
-      const app = configFrom(givenEnv());
-      expect(app).toEqual(expect.objectContaining({persistence: "memory"}));
-    });
-
-    it.each([
-      ["", "memory"],
-      ["   ", "memory"],
-      ["memory", "memory"],
-      ["MEMORY", "memory"],
-      ["postgres", "memory"],
-      ["anything-else", "memory"],
-    ])("returns memory when PERSISTENCE is %p", (input, expected) => {
-      const env = givenEnv({PERSISTENCE: input});
-      const appConfig = configFrom(env);
-      expect(appConfig.persistence).toBe(expected);
-    });
-
-    it.each(["mongo", "Mongo", "MONGO", "  mongo  "])("returns mongo when PERSISTENCE is %p", (input) => {
-      const appConfig = configFrom(givenEnv({PERSISTENCE: input}));
-      expect(appConfig.persistence).toBe("mongo");
-    });
-  });
-
+  
   it("should respect MONGO_PORT override when building the URI", () => {
     const appConfig = configFrom(givenEnv({MONGO_HOST: "h", MONGO_PORT: "27018", MONGO_DATABASE: "d"}));
     expect(appConfig.database.uri).toBe("mongodb://h:27018/d");

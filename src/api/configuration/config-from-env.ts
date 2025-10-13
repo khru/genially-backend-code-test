@@ -1,6 +1,5 @@
-import type { AppConfig, PersistenceType } from "@configuration/app-config";
+import type { AppConfig } from "@configuration/app-config";
 import { DEFAULTS, Env, EnvVar } from "@configuration/env";
-import { PersistenceTypes } from "@configuration/persistence-types";
 
 export class ConfigFactory {
   private static readonly _emptyString = "";
@@ -34,11 +33,6 @@ export class ConfigFactory {
       resolved[key] = ConfigFactory.resolveKnownVar(sourceEnv, key);
     }
     return resolved;
-  }
-
-  private static parsePersistence(input?: string): PersistenceType {
-    const normalized = ConfigFactory.trimToEmpty(input).toLowerCase();
-    return normalized === PersistenceTypes.MONGO ? PersistenceTypes.MONGO : PersistenceTypes.MEMORY;
   }
 
   private static explicitMongoHost(sourceEnv: Env): string | undefined {
@@ -86,19 +80,18 @@ export class ConfigFactory {
     password: string;
     authSource: string;
   }): string {
-    const { host, port, dbName, username, password, authSource } = params;
+    const {host, port, dbName, username, password, authSource} = params;
     return `mongodb://${ConfigFactory.credentialsSegment(username, password)}${host}:${port}/${dbName}${ConfigFactory.authQuery(authSource)}`;
   }
 
   private static buildMongoUriNoAuth(params: { host: string; port: string; dbName: string }): string {
-    const { host, port, dbName } = params;
+    const {host, port, dbName} = params;
     return `mongodb://${host}:${port}/${dbName}`;
   }
 
   static from(sourceEnv: Env): AppConfig {
     const resolved = ConfigFactory.resolveKnownEnv(sourceEnv);
 
-    const persistence = ConfigFactory.parsePersistence(resolved[EnvVar.PERSISTENCE]);
     const dbName = resolved[EnvVar.MONGO_DATABASE];
 
     const providedUri = ConfigFactory.trimToEmpty(sourceEnv[EnvVar.MONGO_URI]);
@@ -109,24 +102,19 @@ export class ConfigFactory {
       ? providedUri
       : ConfigFactory.shouldUseMongoAuth(sourceEnv)
         ? ConfigFactory.buildMongoUriWithAuth({
-            host,
-            port,
-            dbName,
-            username: resolved[EnvVar.MONGO_USERNAME],
-            password: resolved[EnvVar.MONGO_PASSWORD],
-            authSource: resolved[EnvVar.MONGO_AUTH_SOURCE],
-          })
-        : ConfigFactory.buildMongoUriNoAuth({
-            host,
-            port,
-            dbName,
-          });
+          host,
+          port,
+          dbName,
+          username: resolved[EnvVar.MONGO_USERNAME],
+          password: resolved[EnvVar.MONGO_PASSWORD],
+          authSource: resolved[EnvVar.MONGO_AUTH_SOURCE],
+        })
+        : ConfigFactory.buildMongoUriNoAuth({host, port, dbName});
 
     const collection = resolved[EnvVar.MONGO_COLLECTION];
 
     return {
-      persistence,
-      database: { uri, dbName, collection },
+      database: {uri, dbName, collection},
     };
   }
 

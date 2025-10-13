@@ -1,9 +1,13 @@
-import { getAgent } from "../helpers/http";
+import { getAgent, stopAgent } from "../helpers/http";
 
 describe("Create Genially Controller", () => {
   let agent: Awaited<ReturnType<typeof getAgent>>;
   beforeAll(async () => {
     agent = await getAgent();
+  });
+
+  afterAll(async () => {
+    await stopAgent();
   });
 
   it("POST / should return 201 status with a genially", async () => {
@@ -100,7 +104,7 @@ describe("Create Genially Controller", () => {
         },
         expectRegex: /description.*125|exceed.*125/i,
       },
-    ])("$case", async ({ payload, expectRegex }) => {
+    ])("$case", async ({payload, expectRegex}) => {
       const res = await agent.post("/genially").send(payload).expect("Content-Type", /json/).expect(400);
 
       expect(res.body).toHaveProperty("error");

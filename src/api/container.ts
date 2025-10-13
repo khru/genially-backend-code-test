@@ -1,10 +1,7 @@
-import { asClass, asFunction, asValue, AwilixContainer, createContainer, InjectionMode, } from "awilix";
+import { asClass, asFunction, asValue, AwilixContainer, createContainer, InjectionMode } from "awilix";
 
 import type { AppConfig } from "@configuration/app-config";
 import { configFromEnv } from "@configuration/config-from-env";
-import { PersistenceTypes } from "@configuration/persistence-types";
-
-import InMemoryGeniallyRepository from "@infrastructure/InMemoryGeniallyRepository";
 import MongoGeniallyRepository from "@infrastructure/MongoGeniallyRepository";
 
 import CreateGeniallyService from "@application/CreateGeniallyService";
@@ -32,23 +29,16 @@ export async function buildContainer(config?: AppConfig): Promise<{
   dispose: () => Promise<void>;
 }> {
   const appConfig = config ?? configFromEnv();
-
   const container = createContainer({injectionMode: InjectionMode.CLASSIC});
 
-  let client: MongoClientT | undefined;
-  let db: DbT | undefined;
+  const {MongoClient} = await import("mongodb");
+  const client: MongoClientT = new MongoClient(appConfig.database.uri);
+  await client.connect();
+  const db: DbT = client.db(appConfig.database.dbName);
 
-  if (appConfig.persistence === PersistenceTypes.MONGO) {
-    const {MongoClient} = await import("mongodb");
-    client = new MongoClient(appConfig.database.uri);
-    await client.connect();
-    db = client.db(appConfig.database.dbName);
-  }
+  await db.command({ping: 1});
 
-  const repository =
-    appConfig.persistence === PersistenceTypes.MONGO
-      ? new MongoGeniallyRepository(assertDb(db), appConfig.database.collection)
-      : new InMemoryGeniallyRepository();
+  const repository = new MongoGeniallyRepository(assertDb(db), appConfig.database.collection);
 
   container.register({
     // Values

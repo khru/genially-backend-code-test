@@ -6,14 +6,14 @@ import { createGeniallyResponse, GeniallyResponse } from "@controllers/responses
 
 export function createGeniallyControllerFactory(createGeniallyService: CreateGeniallyService) {
   return async (request: Request, response: Response) => {
-    const { id, name } = request.body;
+    const {id, name} = request.body;
 
     if (!id) {
-      return response.status(400).json({ error: "Field 'id' is required" });
+      return response.status(400).json({error: "Field 'id' is required"});
     }
 
     if (!name) {
-      return response.status(400).json({ error: "Field 'name' is required" });
+      return response.status(400).json({error: "Field 'name' is required"});
     }
 
     try {
@@ -29,7 +29,7 @@ export function createGeniallyControllerFactory(createGeniallyService: CreateGen
       }
 
       return response.status(500).json({
-        error: "Internal server error",
+        error: `Internal server error: ${JSON.stringify(error)}`,
       });
     }
   };
