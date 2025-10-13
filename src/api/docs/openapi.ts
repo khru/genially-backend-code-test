@@ -7,9 +7,29 @@ export const openApiDocument: OpenAPIV3.Document = {
     version: "1.0.0",
     description: "API for creating, renaming and (soft) deleting geniallys.",
   },
-  servers: [{ url: "/" }],
-  tags: [{ name: "Genially", description: "Operations on genially resources" }],
+  servers: [{url: "/"}],
+  tags: [{name: "Genially", description: "Operations on genially resources"}],
   paths: {
+    "/metrics/genially/created": {
+      get: {
+        tags: ["Genially"],
+        summary: "Get total number of geniallys ever created",
+        responses: {
+          "200": {
+            description: "OK",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["created"],
+                  properties: {created: {type: "integer", minimum: 0}},
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     "/genially": {
       post: {
         tags: ["Genially"],
@@ -18,7 +38,7 @@ export const openApiDocument: OpenAPIV3.Document = {
           required: true,
           content: {
             "application/json": {
-              schema: { $ref: "#/components/schemas/CreateGeniallyRequest" },
+              schema: {$ref: "#/components/schemas/CreateGeniallyRequest"},
             },
           },
         },
@@ -27,12 +47,12 @@ export const openApiDocument: OpenAPIV3.Document = {
             description: "Created",
             content: {
               "application/json": {
-                schema: { $ref: "#/components/schemas/Genially" },
+                schema: {$ref: "#/components/schemas/Genially"},
               },
             },
           },
-          "400": { $ref: "#/components/responses/BadRequest" },
-          "500": { $ref: "#/components/responses/InternalError" },
+          "400": {$ref: "#/components/responses/BadRequest"},
+          "500": {$ref: "#/components/responses/InternalError"},
         },
       },
     },
@@ -45,16 +65,16 @@ export const openApiDocument: OpenAPIV3.Document = {
             name: "id",
             in: "path",
             required: true,
-            schema: { type: "string" },
+            schema: {type: "string"},
           },
         ],
         responses: {
-          "204": { description: "No Content" },
-          "404": { $ref: "#/components/responses/NotFound" },
+          "204": {description: "No Content"},
+          "404": {$ref: "#/components/responses/NotFound"},
           "412": {
             description: "Precondition Failed (already deleted)",
           },
-          "500": { $ref: "#/components/responses/InternalError" },
+          "500": {$ref: "#/components/responses/InternalError"},
         },
       },
       patch: {
@@ -65,14 +85,14 @@ export const openApiDocument: OpenAPIV3.Document = {
             name: "id",
             in: "path",
             required: true,
-            schema: { type: "string" },
+            schema: {type: "string"},
           },
         ],
         requestBody: {
           required: true,
           content: {
             "application/json": {
-              schema: { $ref: "#/components/schemas/RenameGeniallyRequest" },
+              schema: {$ref: "#/components/schemas/RenameGeniallyRequest"},
             },
           },
         },
@@ -81,16 +101,16 @@ export const openApiDocument: OpenAPIV3.Document = {
             description: "OK",
             content: {
               "application/json": {
-                schema: { $ref: "#/components/schemas/Genially" },
+                schema: {$ref: "#/components/schemas/Genially"},
               },
             },
           },
-          "400": { $ref: "#/components/responses/BadRequest" },
-          "404": { $ref: "#/components/responses/NotFound" },
+          "400": {$ref: "#/components/responses/BadRequest"},
+          "404": {$ref: "#/components/responses/NotFound"},
           "412": {
             description: "Precondition Failed (already deleted)",
           },
-          "500": { $ref: "#/components/responses/InternalError" },
+          "500": {$ref: "#/components/responses/InternalError"},
         },
       },
     },
@@ -101,50 +121,50 @@ export const openApiDocument: OpenAPIV3.Document = {
         type: "object",
         required: ["id", "name", "createdAt"],
         properties: {
-          id: { type: "string", example: "a-random-id" },
-          name: { type: "string", minLength: 3, maxLength: 20 },
-          description: { type: "string", nullable: true, maxLength: 125 },
-          createdAt: { type: "string", format: "date-time" },
-          modifiedAt: { type: "string", format: "date-time", nullable: true },
-          deletedAt: { type: "string", format: "date-time", nullable: true },
+          id: {type: "string", example: "a-random-id"},
+          name: {type: "string", minLength: 3, maxLength: 20},
+          description: {type: "string", nullable: true, maxLength: 125},
+          createdAt: {type: "string", format: "date-time"},
+          modifiedAt: {type: "string", format: "date-time", nullable: true},
+          deletedAt: {type: "string", format: "date-time", nullable: true},
         },
       },
       CreateGeniallyRequest: {
         type: "object",
         required: ["id", "name"],
         properties: {
-          id: { type: "string" },
-          name: { type: "string", minLength: 3, maxLength: 20 },
-          description: { type: "string", nullable: true, maxLength: 125 },
+          id: {type: "string"},
+          name: {type: "string", minLength: 3, maxLength: 20},
+          description: {type: "string", nullable: true, maxLength: 125},
         },
       },
       RenameGeniallyRequest: {
         type: "object",
         required: ["name"],
         properties: {
-          name: { type: "string", minLength: 3, maxLength: 20 },
+          name: {type: "string", minLength: 3, maxLength: 20},
         },
       },
       Error: {
         type: "object",
         properties: {
-          error: { type: "string" },
-          details: { type: "array", items: { type: "string" } },
+          error: {type: "string"},
+          details: {type: "array", items: {type: "string"}},
         },
       },
     },
     responses: {
       BadRequest: {
         description: "Bad Request",
-        content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } },
+        content: {"application/json": {schema: {$ref: "#/components/schemas/Error"}}},
       },
       NotFound: {
         description: "Not Found",
-        content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } },
+        content: {"application/json": {schema: {$ref: "#/components/schemas/Error"}}},
       },
       InternalError: {
         description: "Internal Server Error",
-        content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } },
+        content: {"application/json": {schema: {$ref: "#/components/schemas/Error"}}},
       },
     },
   },

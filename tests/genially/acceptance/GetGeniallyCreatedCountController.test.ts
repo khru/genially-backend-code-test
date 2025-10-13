@@ -1,4 +1,4 @@
-import { getAgent, stopAgent } from "@tests/helpers/http";
+import { getAgent, stopAgent } from "@tests/shared/http";
 
 describe("Metrics genially counter", () => {
   let agent: Awaited<ReturnType<typeof getAgent>>;

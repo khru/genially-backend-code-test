@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import type { GeniallyCountResponse } from "@infrastructure/responses/GeniallyCountResponse";
 import GeniallyCreatedCountService from "@application/GeniallyCreatedCountService";
 
 export function getGeniallyCreatedCountControllerFactory(

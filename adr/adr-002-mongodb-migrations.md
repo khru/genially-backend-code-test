@@ -105,14 +105,14 @@ app starts.
 
 ## Risks & Mitigations
 
-- **R1 — `migrate-mongo` maintenance**: if activity drops or critical bugs emerge.
+- **R1: `migrate-mongo` maintenance**: if activity drops or critical bugs emerge.
   **Mitigation:** quarterly audits (releases, issues, PRs). Pin version. Plan B: Liquibase.
 
-- **R2 — CI/CD parallelism**: migrations run twice.
+- **R2: CI/CD parallelism**: migrations run twice.
   **Mitigation:** one job per environment, locking, state check before applying.
 
-- **R3 — Non-reversible migrations**: some DDL/data changes can’t be undone.
+- **R3: Non-reversible migrations**: some DDL/data changes can’t be undone.
   **Mitigation:** simulate in dev with realistic dataset; mark as “non-reversible”; backups/snapshots before prod.
 
-- **R4 — Dev/prod divergence**: misconfigured URIs/credentials.
+- **R4: Dev/prod divergence**: misconfigured URIs/credentials.
   **Mitigation:** dotenv/secret manager, smoke tests in each environment, pre-checklist.

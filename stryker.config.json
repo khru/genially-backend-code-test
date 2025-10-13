@@ -1,0 +1,41 @@
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "testRunner": "jest",
+  "coverageAnalysis": "perTest",
+  "checkers": [
+    "typescript"
+  ],
+  "tsconfigFile": "tsconfig.json",
+  "typescriptChecker": {
+    "prioritizePerformanceOverAccuracy": true
+  },
+  "mutate": [
+    "src/**/*.ts",
+    "!src/api/server.ts",
+    "!src/api/docs/**",
+    "!src/api/routes/common.ts",
+    "!src/api/app-factory.ts",
+    "!src/api/middleware.ts"
+  ],
+  "ignorePatterns": [
+    "dist/**",
+    "coverage/**",
+    ".stryker-tmp/**",
+    ".github/**",
+    "adr/**",
+    ".http/**",
+    "scripts/**",
+    "mongo-migrations/**",
+    ".idea/**",
+    ".env*",
+    "Dockerfile",
+    "docker-compose.yml",
+    "Makefile",
+    "**/*.md"
+  ],
+  "reporters": [
+    "progress",
+    "clear-text"
+  ],
+  "concurrency": 6
+}

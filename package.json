@@ -16,6 +16,7 @@
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:verbose": "jest --verbose",
+    "test:mutant": "stryker run --ignoreStatic",
     "watch-node": "nodemon dist/server.js",
     "watch-test": "jest --watch",
     "watch-ts": "tsc -w"
@@ -35,6 +36,8 @@
   "devDependencies": {
     "@eslint/js": "^9.37.0",
     "@stoplight/spectral-cli": "^6.15.0",
+    "@stryker-mutator/jest-runner": "^9.2.0",
+    "@stryker-mutator/typescript-checker": "^9.2.0",
     "@testcontainers/mongodb": "^11.7.1",
     "@types/compression": "^1.7.5",
     "@types/errorhandler": "^1.5.3",

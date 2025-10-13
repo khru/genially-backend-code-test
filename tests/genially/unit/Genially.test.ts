@@ -1,32 +1,32 @@
-import Genially from "../../src/contexts/core/genially/domain/Genially";
-import { getError } from "../helpers/ErrorHandler";
-import GeniallyValidationError from "../../src/contexts/core/genially/domain/exception/GeniallyValidationError";
-import GeniallyAlreadyDeleted from "../../src/contexts/core/genially/domain/exception/GeniallyAlreadyDeleted";
-import { InvalidGeniallyNameError } from "../../src/contexts/core/genially/domain/exception/InvalidGeniallyNameError";
+import Genially from "@domain/Genially";
+import GeniallyValidationError from "@domain/exception/GeniallyValidationError";
+import { getError } from "@tests/shared/ErrorHandler";
+import GeniallyAlreadyDeleted from "@domain/exception/GeniallyAlreadyDeleted";
+import { InvalidGeniallyNameError } from "@domain/exception/InvalidGeniallyNameError";
 
 describe("Genially validations", () => {
   describe("name", () => {
     it.each([
-      { name: "Valid Name", case: "letters and spaces" },
-      { name: "abc", case: "exact lower bound 3" },
-      { name: "a".repeat(20), case: "exact upper bound 20" },
-    ])("accepts valid name: $case", ({ name }) => {
+      {name: "Valid Name", case: "letters and spaces"},
+      {name: "abc", case: "exact lower bound 3"},
+      {name: "a".repeat(20), case: "exact upper bound 20"},
+    ])("accepts valid name: $case", ({name}) => {
       expect(() => new Genially("id", name)).not.toThrow();
     });
 
     it.each([
-      { name: "", case: "empty" },
-      { name: "   ", case: "whitespace only" },
-      { name: "ab", case: "too short 2" },
-      { name: "a".repeat(21), case: "too long 21" },
-    ])("rejects invalid name: $case", ({ name }) => {
+      {name: "", case: "empty"},
+      {name: "   ", case: "whitespace only"},
+      {name: "ab", case: "too short 2"},
+      {name: "a".repeat(21), case: "too long 21"},
+    ])("rejects invalid name: $case", ({name}) => {
       expect(() => new Genially("id", name)).toThrow(GeniallyValidationError);
     });
 
     it.each([
-      { name: "ab", case: "below min length" },
-      { name: "a".repeat(21), case: "above max length" },
-    ])("includes the length rule when $case", ({ name }) => {
+      {name: "ab", case: "below min length"},
+      {name: "a".repeat(21), case: "above max length"},
+    ])("includes the length rule when $case", ({name}) => {
       const error = getError<GeniallyValidationError>(() => new Genially("id", name));
       expect(error.errors).toEqual(expect.arrayContaining([expect.stringContaining("between 3 and 20 characters")]));
     });
@@ -34,17 +34,17 @@ describe("Genially validations", () => {
 
   describe("description", () => {
     it.each([
-      { label: "omitted", create: () => new Genially("id", "ValidName") },
-      { label: "empty string", create: () => new Genially("id", "ValidName", "") },
-      { label: "exactly 125", create: () => new Genially("id", "ValidName", "a".repeat(125)) },
-    ])("accepts description: $label", ({ create }) => {
+      {label: "omitted", create: () => new Genially("id", "ValidName")},
+      {label: "empty string", create: () => new Genially("id", "ValidName", "")},
+      {label: "exactly 125", create: () => new Genially("id", "ValidName", "a".repeat(125))},
+    ])("accepts description: $label", ({create}) => {
       expect(create).not.toThrow();
     });
 
     it("rejects description longer than 125", () => {
       const error = getError<GeniallyValidationError>(() => new Genially("id", "ValidName", "a".repeat(126)));
       expect(error.errors).toEqual(
-        expect.arrayContaining([expect.stringContaining("Description cannot exceed 125 characters")]),
+        expect.arrayContaining([expect.stringContaining("Description cannot exceed 125 characters")])
       );
     });
   });
@@ -58,9 +58,16 @@ describe("Genially validations", () => {
         expect.arrayContaining([
           expect.stringContaining("between 3 and 20 characters"),
           expect.stringContaining("Description cannot exceed 125 characters"),
-        ]),
+        ])
       );
       expect(error.message).toContain("Validation failed:");
+    });
+
+    it("uses a comma separator in the message and stable error name", () => {
+      const error = getError<GeniallyValidationError>(() => new Genially("id", "ab", "a".repeat(126)));
+      // Strong assertions to kill mutants removing comma or renaming error
+      expect(error.name).toBe("GeniallyValidationError");
+      expect(error.message).toMatch(/, /); // there is a comma+space between aggregated messages
     });
   });
 
@@ -107,11 +114,11 @@ describe("Genially validations", () => {
     });
 
     it.each([
-      { case: "too short", newName: "ab" },
-      { case: "too long", newName: "a".repeat(21) },
-      { case: "empty", newName: "" },
-      { case: "whitespace", newName: "   " },
-    ])("throws InvalidGeniallyNameError when name is invalid ($case)", ({ newName }) => {
+      {case: "too short", newName: "ab"},
+      {case: "too long", newName: "a".repeat(21)},
+      {case: "empty", newName: ""},
+      {case: "whitespace", newName: "   "},
+    ])("throws InvalidGeniallyNameError when name is invalid ($case)", ({newName}) => {
       const genially = new Genially("rename-domain-invalid-id", "Old Name");
       expect(() => genially.rename(newName)).toThrow(InvalidGeniallyNameError);
     });

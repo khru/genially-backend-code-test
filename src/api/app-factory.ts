@@ -2,6 +2,8 @@ import bodyParser from "body-parser";
 import compression from "compression";
 import express, { Application } from "express";
 import lusca from "lusca";
+import { correlationId } from "@api/middleware/correlation-id";
+
 
 export function createExpressApp(): Application {
   const app = express();
@@ -14,6 +16,7 @@ export function createExpressApp(): Application {
   app.use(bodyParser.urlencoded({extended: true}));
   app.use(lusca.xframe("SAMEORIGIN"));
   app.use(lusca.xssProtection(true));
+  app.use(correlationId);
 
   return app;
 }

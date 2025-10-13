@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import RenameGeniallyService from "@application/RenameGeniallyService";
-import { createGeniallyResponse, GeniallyResponse } from "./responses/GeniallyResponse";
+
 import { InvalidGeniallyNameError } from "@domain/exception/InvalidGeniallyNameError";
 import GeniallyAlreadyDeleted from "@domain/exception/GeniallyAlreadyDeleted";
 import GeniallyNotExist from "@domain/exception/GeniallyNotExist";
+import { createGeniallyResponse, GeniallyResponse } from "@infrastructure/responses/GeniallyResponse";
 
 export function renameGeniallyControllerFactory(renameGeniallyService: RenameGeniallyService) {
   return async (request: Request, response: Response) => {

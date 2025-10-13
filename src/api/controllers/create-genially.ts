@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import CreateGeniallyService from "@application/CreateGeniallyService";
 import Genially from "@domain/Genially";
 import GeniallyValidationError from "@domain/exception/GeniallyValidationError";
-import { createGeniallyResponse, GeniallyResponse } from "@controllers/responses/GeniallyResponse";
+import { createGeniallyResponse, GeniallyResponse } from "@infrastructure/responses/GeniallyResponse";
 
 export function createGeniallyControllerFactory(createGeniallyService: CreateGeniallyService) {
   return async (request: Request, response: Response) => {

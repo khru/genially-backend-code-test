@@ -111,3 +111,24 @@ I've like a lot the interview, I think that was a good experience, the only down
 the exercise is a simple CRUD, with no real business logic, that's why I've also taken some turns that I would not do
 it on a real project, like a better testing strategy, or using API first with OpenAPI, ensuring that domain objects are
 tighter to the domain and not to the infrastructure.
+
+### Testing strategy
+
+Usually in projects like this I'd like to use a testing strategy, of acceptance tests that will be a black box,
+asserting the output of the system (like the ones I've done mostly),
+Then I usually do narrow integration tests, where I use unit test to cover the use cases or services doubling the
+dependencies, and finally I do a narrow integrating test, against a test container or a system that will ensure that
+that connection and storage will work.
+I also use "integration test / sociable test" to cover most of the parts where I do not need a test double or a need to
+create a boundary.
+
+In case that I need also to test some side effect like calling a queue or an external system, I usually do subcutaneous
+acceptance tests for systems that are on the teams control. If the system is not under our control, I usually do
+contract tests with "PACT" or similar tools, you could try to do it with openapi, but I think that is not the best tool
+for the job.
+
+### Because I've also done a lot of tests for the configuration of the system
+
+And some things related to configuring the project, I've not added test. The behavior from the system
+perspective is different from that the user perspective, I did not like some tests I've done, for that reason I've
+decided to use mutant testing to see the weakness of the test, so I can improve them.

@@ -39,24 +39,41 @@ describe("MongoGeniallyRepository", () => {
 
   describe("save", () => {
     it("should store a genially", async () => {
+      // Arrange
       const aRandomId = "dbf75809-4e8d-4bf3-8110-f98275f26cd6";
       const genially = new Genially(aRandomId, "Name One", "Some description");
+
+      // Act
       await mongoGeniallyRepository.save(genially);
 
+      // Assert
       const found = await mongoGeniallyRepository.find(aRandomId);
-
       expect(found).toEqual(genially);
     });
 
     it("should update a genially when call more than one time with the same id", async () => {
+      // Arrange
       const genially1 = new Genially("same-id", "First Name", "v1");
       const genially2 = new Genially("same-id", "Updated Name", "v2");
 
+      // Act
       await mongoGeniallyRepository.save(genially1);
       await mongoGeniallyRepository.save(genially2);
 
+      // Assert
       const geniallyFound = await mongoGeniallyRepository.find("same-id");
       expect(geniallyFound).toEqual(genially2);
+    });
+
+
+    it("persists modifiedAt as null when absent and maps back to undefined on read", async () => {
+      // Arrange
+      const id = "no-modified-at-id";
+      await mongoGeniallyRepository.save(new Genially(id, "Name"));
+
+      // Assert
+      const found = await mongoGeniallyRepository.find(id);
+      expect(found.modifiedAt).toBeUndefined();
     });
   });
 
@@ -124,5 +141,19 @@ describe("MongoGeniallyRepository", () => {
         expect(after).toEqual(before);
       });
     });
+  });
+
+  // New: default collection name used when none is provided
+  it("uses the default collection name when none is provided", async () => {
+    // Arrange
+    const repoWithDefault = new MongoGeniallyRepository(db); // no collectionName
+    const id = "default-collection-id";
+
+    // Act
+    await repoWithDefault.save(new Genially(id, "Default Col"));
+
+    // Assert
+    const found = await repoWithDefault.find(id);
+    expect(found.id).toBe(id);
   });
 });

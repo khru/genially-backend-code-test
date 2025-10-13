@@ -33,3 +33,7 @@ mongo-migrations/node_modules
 
 # local env files
 .env
+
+
+# Stryker
+.stryker-tmp
