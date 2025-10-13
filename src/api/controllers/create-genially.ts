@@ -19,7 +19,7 @@ export function createGeniallyControllerFactory(createGeniallyService: CreateGen
     try {
       const genially: Genially = await createGeniallyService.execute(request.body);
       const geniallyResponse: GeniallyResponse = createGeniallyResponse(genially);
-      response.status(201).contentType("application/json").send(geniallyResponse);
+      response.status(201).json(geniallyResponse);
     } catch (error) {
       if (error instanceof GeniallyValidationError) {
         return response.status(400).json({

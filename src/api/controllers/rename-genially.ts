@@ -17,7 +17,7 @@ export function renameGeniallyControllerFactory(renameGeniallyService: RenameGen
       const genially = await renameGeniallyService.execute({id: request.params.id as string, name});
 
       const body: GeniallyResponse = createGeniallyResponse(genially);
-      return response.status(200).contentType("application/json").send(body);
+      return response.status(200).json(body);
     } catch (error) {
       if (error instanceof InvalidGeniallyNameError) {
         return response.status(400).json({error: error.message});

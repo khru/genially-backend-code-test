@@ -5,8 +5,8 @@ import GeniallyCreatedCountService from "@application/GeniallyCreatedCountServic
 export function getGeniallyCreatedCountControllerFactory(
   geniallyCreatedCountService: GeniallyCreatedCountService
 ) {
-  return async (_req: Request, res: Response) => {
+  return async (_req: Request, response: Response) => {
     const totalGeniallyCreated: GeniallyCountResponse = await geniallyCreatedCountService.execute();
-    res.status(200).json(totalGeniallyCreated);
+    response.status(200).json(totalGeniallyCreated);
   };
 }
