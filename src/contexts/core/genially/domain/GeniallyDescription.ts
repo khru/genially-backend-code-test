@@ -2,15 +2,15 @@ import { InvalidGeniallyDescriptionError } from "@domain/exception/InvalidGenial
 
 export default class GeniallyDescription {
   private readonly _maxLength = 125;
-  readonly description: string;
+  readonly description?: string;
 
-  constructor(description: string | undefined) {
+  constructor(description?: string) {
     this.throwInvalidNameLength(description);
 
     this.description = description;
   }
 
-  private throwInvalidNameLength(description: string) {
+  private throwInvalidNameLength(description?: string) {
     if (description && description.length > this._maxLength) {
       throw new InvalidGeniallyDescriptionError(`Description cannot exceed ${this._maxLength} characters`);
     }

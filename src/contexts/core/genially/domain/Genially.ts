@@ -57,7 +57,7 @@ export default class Genially {
     return this._name.name;
   }
 
-  get description(): string {
+  get description(): string | undefined {
     return this._description.description;
   }
 
@@ -65,11 +65,11 @@ export default class Genially {
     return this._createdAt;
   }
 
-  get modifiedAt(): Date {
+  get modifiedAt(): Date | undefined {
     return this._modifiedAt;
   }
 
-  get deletedAt(): Date {
+  get deletedAt(): Date | undefined {
     return this._deletedAt;
   }
 
@@ -84,6 +84,17 @@ export default class Genially {
     }
     this._name = new GeniallyName(newName);
     this._modifiedAt = new Date();
+  }
+
+  toPrimitives(): UpdatableGenially {
+    return {
+      id: this._id,
+      name: this._name.name,
+      description: this._description.description,
+      createdAt: this._createdAt,
+      modifiedAt: this._modifiedAt,
+      deletedAt: this._deletedAt,
+    };
   }
 
   static fromPrimitives(geniallyPrimitive: UpdatableGenially): Genially {

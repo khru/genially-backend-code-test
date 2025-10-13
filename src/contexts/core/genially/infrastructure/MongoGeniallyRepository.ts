@@ -21,19 +21,20 @@ export default class MongoGeniallyRepository implements GeniallyRepository {
   }
 
   async save(genially: Genially): Promise<void> {
+    const primitives = genially.toPrimitives();
     const doc: GeniallyDoc = {
-      _id: genially.id,
-      name: genially.name,
-      description: genially.description ?? null,
-      createdAt: genially.createdAt,
-      modifiedAt: genially.modifiedAt ?? null,
-      deletedAt: genially.deletedAt ?? null,
+      _id: primitives.id,
+      name: primitives.name,
+      description: primitives.description ?? null,
+      createdAt: primitives.createdAt,
+      modifiedAt: primitives.modifiedAt ?? null,
+      deletedAt: primitives.deletedAt ?? null,
     };
-    await this.geniallyCollection.updateOne({_id: doc._id}, {$set: doc}, {upsert: true});
+    await this.geniallyCollection.updateOne({ _id: doc._id }, { $set: doc }, { upsert: true });
   }
 
   async find(id: string): Promise<Genially> {
-    const geniallyDocument = await this.geniallyCollection.findOne({_id: id});
+    const geniallyDocument = await this.geniallyCollection.findOne({ _id: id });
     if (!geniallyDocument) throw new GeniallyNotExist(id);
 
     return Genially.fromPrimitives({

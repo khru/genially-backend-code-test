@@ -4,7 +4,6 @@ import express, { Application } from "express";
 import lusca from "lusca";
 import { correlationId } from "@api/middleware/correlation-id";
 
-
 export function createExpressApp(): Application {
   const app = express();
 

@@ -130,4 +130,44 @@ describe("Genially validations", () => {
       expect(() => genially.rename("New Name")).toThrow(GeniallyAlreadyDeleted);
     });
   });
+
+  describe("Genially serialization", () => {
+    it("converts to primitives and rehydrates with the same state", () => {
+      const genially = new Genially("serialize-id", "Original Name", "Original description");
+      genially.rename("Serialized Name");
+      genially.delete();
+
+      const primitives = genially.toPrimitives();
+
+      expect(primitives).toEqual(
+        expect.objectContaining({
+          id: "serialize-id",
+          name: "Serialized Name",
+          description: "Original description",
+          createdAt: expect.any(Date),
+          modifiedAt: expect.any(Date),
+          deletedAt: expect.any(Date),
+        }),
+      );
+
+      const rehydrated = Genially.fromPrimitives(primitives);
+
+      expect(rehydrated.id).toBe(genially.id);
+      expect(rehydrated.name).toBe(genially.name);
+      expect(rehydrated.description).toBe(genially.description);
+      expect(rehydrated.createdAt).toEqual(genially.createdAt);
+      expect(rehydrated.modifiedAt).toEqual(genially.modifiedAt);
+      expect(rehydrated.deletedAt).toEqual(genially.deletedAt);
+    });
+
+    it("preserves undefined optional fields when serializing", () => {
+      const genially = new Genially("serialize-undefined-id", "No description");
+
+      const primitives = genially.toPrimitives();
+
+      expect(primitives.description).toBeUndefined();
+      expect(primitives.modifiedAt).toBeUndefined();
+      expect(primitives.deletedAt).toBeUndefined();
+    });
+  });
 });

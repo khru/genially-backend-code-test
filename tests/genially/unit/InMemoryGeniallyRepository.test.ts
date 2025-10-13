@@ -37,7 +37,6 @@ describe("InMemoryGeniallyRepository", () => {
     });
   });
 
-
   describe("find", () => {
     it("should return a throw an error when id is not found", async () => {
       // Act

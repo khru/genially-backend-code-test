@@ -179,7 +179,7 @@ describe("ConfigFactory.from", () => {
 
     expect(appConfig.database.uri).toBe("mongodb://user%40corp.com:p%40%24%24%3Aword@host:27017/d?authSource=admin");
   });
-  
+
   it("should respect MONGO_PORT override when building the URI", () => {
     const appConfig = configFrom(givenEnv({MONGO_HOST: "h", MONGO_PORT: "27018", MONGO_DATABASE: "d"}));
     expect(appConfig.database.uri).toBe("mongodb://h:27018/d");

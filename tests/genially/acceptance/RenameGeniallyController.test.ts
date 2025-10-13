@@ -40,7 +40,10 @@ describe("Rename Genially Controller", () => {
 
   it("PATCH /genially/:id returns 400 when name is missing", async () => {
     // Arrange
-    await agent.post("/genially").send({id: "rename-missing-name-id", name: "Old Name"}).expect(201);
+    await agent
+      .post("/genially")
+      .send({id: "rename-missing-name-id", name: "Old Name"})
+      .expect(201);
 
     // Act
     const response = await agent

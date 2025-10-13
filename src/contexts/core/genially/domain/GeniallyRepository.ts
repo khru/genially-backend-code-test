@@ -4,7 +4,7 @@ import { GeniallyCount } from "@domain/GeniallyCount";
 interface GeniallyRepository {
   save(genially: Genially): Promise<void>;
 
-  find(id: string): Promise<Genially | undefined>;
+  find(id: string): Promise<Genially>;
 
   delete(id: string): Promise<void>;
 

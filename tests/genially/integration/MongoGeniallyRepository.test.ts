@@ -65,7 +65,6 @@ describe("MongoGeniallyRepository", () => {
       expect(geniallyFound).toEqual(genially2);
     });
 
-
     it("persists modifiedAt as null when absent and maps back to undefined on read", async () => {
       // Arrange
       const id = "no-modified-at-id";
