@@ -5,7 +5,7 @@
 const config = {
   printWidth: 120,
   semi: true,
-  singleQuote: true,
+  singleQuote: false,
   trailingComma: 'all',
 };
 
