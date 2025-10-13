@@ -40,6 +40,6 @@ describe("DI Container bootstrap", () => {
         collection: "geniallies",
       },
     };
-    await expect(buildContainer(appConfig)).rejects.toThrow(/server|ENOTFOUND|ECONNREFUSED/i);
+    await expect(buildContainer(appConfig)).rejects.toThrow(/server|ENOTFOUND|ECONNREFUSED|EAI_AGAIN|getaddrinfo/i);
   });
 });

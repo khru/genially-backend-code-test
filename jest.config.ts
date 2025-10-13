@@ -23,7 +23,7 @@ const config: Config = {
   moduleFileExtensions: ["ts", "js", "json"],
   clearMocks: true,
   verbose: true,
-  testTimeout: 60000,
+  testTimeout: 30000,
   modulePaths: [compilerOptions.baseUrl],
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
 };
