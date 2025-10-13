@@ -8,40 +8,28 @@ import * as healthController from "@controllers/health";
 import { openApiDocument } from "@api/docs/openapi";
 
 import { AppConfig } from "@configuration/app-config";
-import { AppConfigurator } from "@configuration/app-configurator";
-import { configFromEnv } from "@configuration/config-from-env";
-import { composeControllers } from "@configuration/compose";
+import { buildContainer } from "@api/container";
 
 export async function createConfiguredApp(config?: AppConfig) {
-  const appConfig = config ?? configFromEnv();
-  const configurator = new AppConfigurator(appConfig);
-  await configurator.init();
-
-  const repository = configurator.getGeniallyRepository();
-  console.log("[DB] Repository:", repository.constructor.name);
-  const { createGeniallyController, deleteGeniallyController, renameGeniallyController } =
-    composeControllers(repository);
+  const {container, dispose} = await buildContainer(config);
 
   const app = express();
   app.set("port", process.env.PORT || 3000);
   app.use(compression());
   app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.urlencoded({extended: true}));
   app.use(lusca.xframe("SAMEORIGIN"));
   app.use(lusca.xssProtection(true));
 
   // routes
   app.get("/", healthController.check);
-  app.post("/genially", createGeniallyController);
-  app.delete("/genially/:id", deleteGeniallyController);
-  app.patch("/genially/:id", renameGeniallyController);
+  app.post("/genially", container.resolve("createGeniallyController"));
+  app.delete("/genially/:id", container.resolve("deleteGeniallyController"));
+  app.patch("/genially/:id", container.resolve("renameGeniallyController"));
 
   // docs
   app.get("/openapi.json", (_req, res) => res.json(openApiDocument));
   app.use("/docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));
 
-  return {
-    app,
-    close: () => configurator.close(),
-  };
+  return {app, close: dispose};
 }
