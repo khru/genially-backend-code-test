@@ -13,8 +13,9 @@ describe("AppConfiguration", () => {
     {
       title: "InMemory",
       build: async () => ({
-        config: { persistence: "memory", database: { uri: "", dbName: "", collection: "" } },
-        cleanup: async () => {},
+        config: {persistence: "memory", database: {uri: "", dbName: "", collection: ""}},
+        cleanup: async () => {
+        },
       }),
     },
     {
@@ -24,7 +25,7 @@ describe("AppConfiguration", () => {
         return {
           config: {
             persistence: "mongo",
-            database: { uri: mongod.getUri(), dbName: "app-factory-tests", collection: "geniallies" },
+            database: {uri: mongod.getUri(), dbName: "app-factory-tests", collection: "geniallies"},
           },
           cleanup: async () => {
             await mongod.stop();
@@ -32,20 +33,32 @@ describe("AppConfiguration", () => {
         };
       },
     },
-  ])("$title → wires routes and CRUD journey", async ({ build }) => {
-    const { config, cleanup } = await build();
-    const { app, close } = await createConfiguredApp(config);
+  ])("$title → wires routes and CRUD journey", async ({build}) => {
+    const {config, cleanup} = await build();
+    const {app, close} = await createConfiguredApp(config);
     const id = `journey-${Date.now()}`;
 
     try {
-      await request(app).post("/genially").send({ id, name: "a genially" }).expect(201);
+      await request(app).post("/genially").send({id, name: "a genially"}).expect(201);
 
-      await request(app).patch(`/genially/${id}`).send({ name: "updated-name" }).expect(200);
+      await request(app).patch(`/genially/${id}`).send({name: "updated-name"}).expect(200);
 
       await request(app).delete(`/genially/${id}`).expect(204);
     } finally {
       await close();
       await cleanup();
     }
+  });
+
+  it("mongo close twice ok", async () => {
+    const mongod = await MongoMemoryServer.create();
+    const appConfig: AppConfig = {
+      persistence: "mongo",
+      database: {uri: mongod.getUri(), dbName: "close-tests", collection: "geniallies"},
+    };
+    const {close} = await createConfiguredApp(appConfig);
+    await close();
+    await expect(close()).resolves.toBeUndefined();
+    await mongod.stop();
   });
 });

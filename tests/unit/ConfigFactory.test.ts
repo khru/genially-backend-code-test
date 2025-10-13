@@ -65,19 +65,19 @@ describe("ConfigFactory.from", () => {
     },
     {
       title: "ignores whitespace-only MONGO_URI and builds from pieces",
-      env: { MONGO_URI: "   " },
+      env: {MONGO_URI: "   "},
       expectedUri: "mongodb://localhost:27017/genially",
       expectedDb: "genially",
       expectedCol: "geniallies",
     },
     {
       title: "trims spaces around MONGO_URI and uses the trimmed value",
-      env: { MONGO_URI: "  mongodb://h:27017/d?x=1  " },
+      env: {MONGO_URI: "  mongodb://h:27017/d?x=1  "},
       expectedUri: "mongodb://h:27017/d?x=1",
       expectedDb: "genially",
       expectedCol: "geniallies",
     },
-  ])("MONGO_URI override: $title", ({ env, expectedUri, expectedDb, expectedCol }) => {
+  ])("MONGO_URI override: $title", ({env, expectedUri, expectedDb, expectedCol}) => {
     const appConfig = configFrom(givenEnv(env));
     expect(appConfig.database.uri).toBe(expectedUri);
     expect(appConfig.database.dbName).toBe(expectedDb);
@@ -87,12 +87,12 @@ describe("ConfigFactory.from", () => {
   it.each([
     {
       title: "uses explicit MONGO_HOST when provided",
-      env: { MONGO_HOST: "db.internal" },
+      env: {MONGO_HOST: "db.internal"},
       expectedUri: "mongodb://db.internal:27017/genially",
     },
     {
       title: "uses explicit MONGO_CONTAINER_NAME when host is not provided",
-      env: { MONGO_CONTAINER_NAME: "mongo-svc" },
+      env: {MONGO_CONTAINER_NAME: "mongo-svc"},
       expectedUri: "mongodb://mongo-svc:27017/genially",
     },
     {
@@ -102,10 +102,10 @@ describe("ConfigFactory.from", () => {
     },
     {
       title: "ignores whitespace-only host and container then uses default",
-      env: { MONGO_HOST: "   ", MONGO_CONTAINER_NAME: "   " },
+      env: {MONGO_HOST: "   ", MONGO_CONTAINER_NAME: "   "},
       expectedUri: "mongodb://localhost:27017/genially",
     },
-  ])("host precedence: $title", ({ env, expectedUri }) => {
+  ])("host precedence: $title", ({env, expectedUri}) => {
     const appConfig = configFrom(givenEnv(env));
     expect(appConfig.database.uri).toBe(expectedUri);
   });
@@ -113,25 +113,25 @@ describe("ConfigFactory.from", () => {
   it.each([
     {
       title: "includes credentials and authSource when both username and password are explicitly provided",
-      env: { PERSISTENCE: "mongo", MONGO_USERNAME: "u", MONGO_PASSWORD: "p", MONGO_HOST: "h", MONGO_DATABASE: "d" },
+      env: {PERSISTENCE: "mongo", MONGO_USERNAME: "u", MONGO_PASSWORD: "p", MONGO_HOST: "h", MONGO_DATABASE: "d"},
       expectedUri: "mongodb://u:p@h:27017/d?authSource=admin",
     },
     {
       title: "omits credentials and authSource when only username is provided",
-      env: { PERSISTENCE: "mongo", MONGO_USERNAME: "u", MONGO_HOST: "h", MONGO_DATABASE: "d" },
+      env: {PERSISTENCE: "mongo", MONGO_USERNAME: "u", MONGO_HOST: "h", MONGO_DATABASE: "d"},
       expectedUri: "mongodb://h:27017/d",
     },
     {
       title: "omits credentials and authSource when only password is provided",
-      env: { PERSISTENCE: "mongo", MONGO_PASSWORD: "p", MONGO_HOST: "h", MONGO_DATABASE: "d" },
+      env: {PERSISTENCE: "mongo", MONGO_PASSWORD: "p", MONGO_HOST: "h", MONGO_DATABASE: "d"},
       expectedUri: "mongodb://h:27017/d",
     },
     {
       title: "trims username and password before deciding to include credentials",
-      env: { MONGO_USERNAME: "  user  ", MONGO_PASSWORD: "  pass  ", MONGO_HOST: "h", MONGO_DATABASE: "d" },
+      env: {MONGO_USERNAME: "  user  ", MONGO_PASSWORD: "  pass  ", MONGO_HOST: "h", MONGO_DATABASE: "d"},
       expectedUri: "mongodb://user:pass@h:27017/d?authSource=admin",
     },
-  ])("auth decision: $title", ({ env, expectedUri }) => {
+  ])("auth decision: $title", ({env, expectedUri}) => {
     const appConfig = configFrom(givenEnv(env));
     expect(appConfig.database.uri).toBe(expectedUri);
   });
@@ -150,20 +150,20 @@ describe("ConfigFactory.from", () => {
     },
     {
       title: "falls back to default MONGO_AUTH_SOURCE when missing",
-      env: { MONGO_USERNAME: "u", MONGO_PASSWORD: "p", MONGO_HOST: "h", MONGO_DATABASE: "d" },
+      env: {MONGO_USERNAME: "u", MONGO_PASSWORD: "p", MONGO_HOST: "h", MONGO_DATABASE: "d"},
       expectedUri: "mongodb://u:p@h:27017/d?authSource=admin",
     },
     {
       title: "falls back to default MONGO_AUTH_SOURCE when whitespace",
-      env: { MONGO_USERNAME: "u", MONGO_PASSWORD: "p", MONGO_HOST: "h", MONGO_DATABASE: "d", MONGO_AUTH_SOURCE: "   " },
+      env: {MONGO_USERNAME: "u", MONGO_PASSWORD: "p", MONGO_HOST: "h", MONGO_DATABASE: "d", MONGO_AUTH_SOURCE: "   "},
       expectedUri: "mongodb://u:p@h:27017/d?authSource=admin",
     },
     {
       title: "does not append authSource when credentials are not used",
-      env: { MONGO_AUTH_SOURCE: "users", MONGO_HOST: "h", MONGO_DATABASE: "d" },
+      env: {MONGO_AUTH_SOURCE: "users", MONGO_HOST: "h", MONGO_DATABASE: "d"},
       expectedUri: "mongodb://h:27017/d",
     },
-  ])("auth source: $title", ({ env, expectedUri }) => {
+  ])("auth source: $title", ({env, expectedUri}) => {
     const appConfig = configFrom(givenEnv(env));
     expect(appConfig.database.uri).toBe(expectedUri);
   });
@@ -184,8 +184,8 @@ describe("ConfigFactory.from", () => {
 
   describe("persistence parsing", () => {
     it("returns memory when PERSISTENCE is undefined", () => {
-      const cfg = configFrom(givenEnv());
-      expect(cfg).toEqual(expect.objectContaining({ persistence: "memory" }));
+      const app = configFrom(givenEnv());
+      expect(app).toEqual(expect.objectContaining({persistence: "memory"}));
     });
 
     it.each([
@@ -196,19 +196,19 @@ describe("ConfigFactory.from", () => {
       ["postgres", "memory"],
       ["anything-else", "memory"],
     ])("returns memory when PERSISTENCE is %p", (input, expected) => {
-      const env = givenEnv({ PERSISTENCE: input });
+      const env = givenEnv({PERSISTENCE: input});
       const appConfig = configFrom(env);
       expect(appConfig.persistence).toBe(expected);
     });
 
     it.each(["mongo", "Mongo", "MONGO", "  mongo  "])("returns mongo when PERSISTENCE is %p", (input) => {
-      const appConfig = configFrom(givenEnv({ PERSISTENCE: input }));
+      const appConfig = configFrom(givenEnv({PERSISTENCE: input}));
       expect(appConfig.persistence).toBe("mongo");
     });
   });
 
   it("should respect MONGO_PORT override when building the URI", () => {
-    const appConfig = configFrom(givenEnv({ MONGO_HOST: "h", MONGO_PORT: "27018", MONGO_DATABASE: "d" }));
+    const appConfig = configFrom(givenEnv({MONGO_HOST: "h", MONGO_PORT: "27018", MONGO_DATABASE: "d"}));
     expect(appConfig.database.uri).toBe("mongodb://h:27018/d");
   });
 });

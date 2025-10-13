@@ -5,8 +5,8 @@ import { buildContainer } from "@api/container";
 
 describe("DI Container bootstrap", () => {
   it("wires controllers with InMemory", async () => {
-    const cfg: AppConfig = {persistence: "memory", database: {uri: "", dbName: "", collection: ""}};
-    const {container, dispose} = await buildContainer(cfg);
+    const appConfig: AppConfig = {persistence: "memory", database: {uri: "", dbName: "", collection: ""}};
+    const {container, dispose} = await buildContainer(appConfig);
 
     const appFactory = async () => {
       const express = (await import("express")).default;
@@ -29,12 +29,12 @@ describe("DI Container bootstrap", () => {
 
   it("wires controllers with Mongo (ephemeral)", async () => {
     const mongod = await MongoMemoryServer.create();
-    const cfg: AppConfig = {
+    const appConfig: AppConfig = {
       persistence: "mongo",
       database: {uri: mongod.getUri(), dbName: "di-tests", collection: "geniallies"},
     };
 
-    const {container, dispose} = await buildContainer(cfg);
+    const {container, dispose} = await buildContainer(appConfig);
     const appFactory = async () => {
       const express = (await import("express")).default;
       const app = express();
@@ -56,7 +56,7 @@ describe("DI Container bootstrap", () => {
   });
 
   it("throws when persistence=mongo and connect fails", async () => {
-    const cfg: AppConfig = {
+    const appConfig: AppConfig = {
       persistence: "mongo",
       database: {
         uri: "mongodb://bad-host:1/?serverSelectionTimeoutMS=200",
@@ -64,16 +64,16 @@ describe("DI Container bootstrap", () => {
         collection: "geniallies",
       },
     };
-    await expect(buildContainer(cfg)).rejects.toThrow(/server|ENOTFOUND|ECONNREFUSED/i);
+    await expect(buildContainer(appConfig)).rejects.toThrow(/server|ENOTFOUND|ECONNREFUSED/i);
   });
 
   it("builds with memory and exposes controllers", async () => {
-    const cfg: AppConfig = {
+    const appConfig: AppConfig = {
       persistence: "memory",
       database: {uri: "", dbName: "", collection: ""},
     };
 
-    const {container, dispose} = await buildContainer(cfg);
+    const {container, dispose} = await buildContainer(appConfig);
     expect(typeof container.resolve("createGeniallyController")).toBe("function");
     expect(typeof container.resolve("deleteGeniallyController")).toBe("function");
     expect(typeof container.resolve("renameGeniallyController")).toBe("function");
