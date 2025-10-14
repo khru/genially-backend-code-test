@@ -96,6 +96,14 @@ define ENSURE_API
 	fi
 endef
 
+define CHECK_CODERABBIT
+	@command -v coderabbit >/dev/null 2>&1 || { \
+		echo "🤖 CodeRabbit CLI not found."; \
+		echo "   More info: https://www.coderabbit.ai/cli"; \
+		echo "   Install : curl -fsSL https://cli.coderabbit.ai/install.sh | sh"; \
+		exit 1; }
+endef
+
 # ------------------------------------------------------------
 # Help and env
 # ------------------------------------------------------------
@@ -518,3 +526,22 @@ clean: ## Remove build outputs and artifacts (dist, coverage)
 	@set -e
 	echo "🧽 Cleaning dist, coverage"
 	rm -rf dist coverage
+
+# ------------------------------------------------------------
+# CodeRabbit – CLI check & uncommitted review
+# ------------------------------------------------------------
+.PHONY: coderabbit-check
+coderabbit-check: ## Verify CodeRabbit CLI is installed
+	$(CHECK_CODERABBIT)
+	@echo "✅ CodeRabbit CLI available"
+
+.PHONY: coderabbit-review
+coderabbit-review: ## Review uncommitted changes with CodeRabbit (base=main)
+	$(CHECK_CODERABBIT)
+	@set -e
+	@if [ ! -f "$(REPO_ROOT)/.coderabbit.yaml" ]; then \
+	  echo "⚠️  .coderabbit.yaml not found at repo root; proceeding with defaults."; \
+	fi
+	@echo "🤖 CodeRabbit reviewing uncommitted changes against 'main'…"
+	coderabbit --type uncommitted --base main -c .coderabbit.yaml --plain
+
