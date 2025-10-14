@@ -543,7 +543,7 @@ coderabbit-review: ## Review uncommitted changes with CodeRabbit (base=$(CODERAB
 	@set -e
 	@echo "🤖 CodeRabbit reviewing uncommitted changes against '$(CODERABBIT_BASE_BRANCH)'…"
 	@if [ -f "$(REPO_ROOT)/.coderabbit.yaml" ]; then \
-	  coderabbit --type uncommitted --base $(CODERABBIT_BASE_BRANCH) -c .coderabbit.yaml --plain; \
+	  coderabbit --type uncommitted --base $(CODERABBIT_BASE_BRANCH) -c "$(REPO_ROOT)/.coderabbit.yaml" --plain; \
 	else \
 	  echo "⚠️  .coderabbit.yaml not found; using CodeRabbit defaults."; \
 	  coderabbit --type uncommitted --base $(CODERABBIT_BASE_BRANCH) --plain; \
