@@ -1,75 +1,45 @@
-import { Response } from "express";
-import { handleGeniallyError } from "@controllers/genially-error-mapper";
+import { mapGeniallyError } from "@controllers/genially-error-mapper";
 import GeniallyValidationError from "@domain/exception/GeniallyValidationError";
 import { InvalidGeniallyNameError } from "@domain/exception/InvalidGeniallyNameError";
 import GeniallyNotExist from "@domain/exception/GeniallyNotExist";
 import GeniallyAlreadyDeleted from "@domain/exception/GeniallyAlreadyDeleted";
 
-const createResponse = () => {
-  const res: Partial<Response> & { statusCode?: number; body?: unknown } = {};
-  res.status = jest.fn((code: number) => {
-    res.statusCode = code;
-    return res as Response;
-  }) as Response["status"];
-  res.json = jest.fn((payload: unknown) => {
-    res.body = payload;
-    return res as Response;
-  }) as Response["json"];
-  return res as Response & { statusCode?: number; body?: unknown };
-};
-
-describe("handleGeniallyError", () => {
-  it("handles GeniallyValidationError", () => {
-    const res = createResponse();
+describe("mapGeniallyError", () => {
+  it("returns 400 with error message and details when GeniallyValidationError occurs", () => {
     const error = new GeniallyValidationError(["Name is invalid"]);
 
-    const handled = handleGeniallyError(res, error);
+    const result = mapGeniallyError(error);
 
-    expect(handled).toBe(true);
-    expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({ error: error.message, details: error.errors });
+    expect(result).toEqual({ status: 400, body: { error: error.message, details: error.errors } });
   });
 
-  it("handles InvalidGeniallyNameError", () => {
-    const res = createResponse();
+  it("returns 400 with error message when InvalidGeniallyNameError occurs", () => {
     const error = new InvalidGeniallyNameError("Name cannot be empty");
 
-    const handled = handleGeniallyError(res, error);
+    const result = mapGeniallyError(error);
 
-    expect(handled).toBe(true);
-    expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({ error: error.message });
+    expect(result).toEqual({ status: 400, body: { error: error.message } });
   });
 
-  it("handles GeniallyNotExist", () => {
-    const res = createResponse();
+  it("returns 404 with error message when GeniallyNotExist occurs", () => {
     const error = new GeniallyNotExist("missing-id");
 
-    const handled = handleGeniallyError(res, error);
+    const result = mapGeniallyError(error);
 
-    expect(handled).toBe(true);
-    expect(res.status).toHaveBeenCalledWith(404);
-    expect(res.json).toHaveBeenCalledWith({ error: error.message });
+    expect(result).toEqual({ status: 404, body: { error: error.message } });
   });
 
-  it("handles GeniallyAlreadyDeleted", () => {
-    const res = createResponse();
+  it("returns 412 with error message when GeniallyAlreadyDeleted occurs", () => {
     const error = new GeniallyAlreadyDeleted("deleted-id");
 
-    const handled = handleGeniallyError(res, error);
+    const result = mapGeniallyError(error);
 
-    expect(handled).toBe(true);
-    expect(res.status).toHaveBeenCalledWith(412);
-    expect(res.json).toHaveBeenCalledWith({ error: error.message });
+    expect(result).toEqual({ status: 412, body: { error: error.message } });
   });
 
-  it("returns false for unknown errors", () => {
-    const res = createResponse();
+  it("returns null when error is unrecognized", () => {
+    const result = mapGeniallyError(new Error("boom"));
 
-    const handled = handleGeniallyError(res, new Error("boom"));
-
-    expect(handled).toBe(false);
-    expect(res.status).not.toHaveBeenCalled();
-    expect(res.json).not.toHaveBeenCalled();
+    expect(result).toBeNull();
   });
 });

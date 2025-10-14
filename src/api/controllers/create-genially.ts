@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import CreateGeniallyService from "@application/CreateGeniallyService";
 import Genially from "@domain/Genially";
 import { createGeniallyResponse, GeniallyResponse } from "@infrastructure/responses/GeniallyResponse";
-import { handleGeniallyError } from "@controllers/genially-error-mapper";
+import { mapGeniallyError } from "@controllers/genially-error-mapper";
 
 export function createGeniallyControllerFactory(createGeniallyService: CreateGeniallyService) {
   return async (request: Request, response: Response) => {
@@ -21,7 +21,10 @@ export function createGeniallyControllerFactory(createGeniallyService: CreateGen
       const geniallyResponse: GeniallyResponse = createGeniallyResponse(genially);
       response.status(201).json(geniallyResponse);
     } catch (error) {
-      if (handleGeniallyError(response, error)) return;
+      const mappedError = mapGeniallyError(error);
+      if (mappedError) {
+        return response.status(mappedError.status).json(mappedError.body);
+      }
 
       return response.status(500).json({
         error: `Internal server error: ${JSON.stringify(error)}`,

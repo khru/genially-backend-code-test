@@ -1,29 +1,29 @@
-import { Response } from "express";
 import GeniallyValidationError from "@domain/exception/GeniallyValidationError";
 import GeniallyAlreadyDeleted from "@domain/exception/GeniallyAlreadyDeleted";
 import GeniallyNotExist from "@domain/exception/GeniallyNotExist";
 import { InvalidGeniallyNameError } from "@domain/exception/InvalidGeniallyNameError";
 
-export function handleGeniallyError(response: Response, error: unknown): boolean {
+export type MappedGeniallyError = {
+  status: number;
+  body: { error: string; details?: unknown };
+};
+
+export function mapGeniallyError(error: unknown): MappedGeniallyError | null {
   if (error instanceof GeniallyValidationError) {
-    response.status(400).json({ error: error.message, details: error.errors });
-    return true;
+    return { status: 400, body: { error: error.message, details: error.errors } };
   }
 
   if (error instanceof InvalidGeniallyNameError) {
-    response.status(400).json({ error: error.message });
-    return true;
+    return { status: 400, body: { error: error.message } };
   }
 
   if (error instanceof GeniallyNotExist) {
-    response.status(404).json({ error: error.message });
-    return true;
+    return { status: 404, body: { error: error.message } };
   }
 
   if (error instanceof GeniallyAlreadyDeleted) {
-    response.status(412).json({ error: error.message });
-    return true;
+    return { status: 412, body: { error: error.message } };
   }
 
-  return false;
+  return null;
 }

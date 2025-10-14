@@ -1,85 +1,62 @@
 # Repository Guidelines
 
-## Project Layout
+## Non-Negotiable Workflow
 
-- Inspect `src/api` for the Express entry point, controllers, and routing glue; add new HTTP code beside its peer
-  module.
-- Respect Clean Architecture boundaries inside `src/contexts/core/genially/{application,domain,infrastructure}`; keep
-  orchestration in application, pure business rules in domain, and IO concerns in infrastructure.
-- Place specs under `tests/{api,genially}/{unit,integration,acceptance}`; share helpers through `tests/shared`.
-- Treat `dist/` and `coverage/` as disposable build outputs. Keep migration scripts inside `mongo-migrations`.
+1. **Red** – before touching production code, add or modify a test so it fails for the new behaviour. Never reuse an
+   existing green test or tweak production code to manufacture a failure.
+2. **Green** – implement the smallest production change needed to satisfy the new failing test. Keep the change within
+   the proper Clean Architecture layer.
+3. **Refactor** – with all tests green, improve names, extract helpers, and remove duplication. When testing, follow
+   the behaviour-first principles below.
+4. **Keep tests green** – do not continue working while the suite is red. Fix the failure or revert the change (use
+   `git checkout --` for local edits or `git revert` for committed work) before moving on.
+5. **Undo uncovered changes** – if you realise you edited production code without a failing test, roll back the edit
+   (or stash it), add the test, and then re-apply the change.
 
-## Core Commands
+## Test Discipline
 
-- Run `make onboarding` once to install dependencies, copy env templates, and set up hooks.
-- Bring the stack up with `make docker-up`; stop it via `make docker-stop` when you are done.
-- For live work, run `npm run dev`. For production artefacts, run `npm run build`.
-- After every change, execute in order: `npm run format`, `npm run lint`, `npm test`. If any step fails, stop, fix, and
-  rerun all three before continuing.
-- Use `npm run test:coverage` or `npm run test:mutant` only when you need coverage or mutation feedback before merging.
+- **Always run unit tests** (`npx jest tests/**/unit --runInBand`) and TypeScript (`npx tsc --noEmit`) after each
+  change. Acceptance and integration suites that need Docker/Testcontainers must be run locally before opening a PR –
+  note in your summary if the sandbox cannot execute them.
+- Tests must be fast, deterministic, and focused on observable behaviour (status code, JSON payload, domain state).
+  Avoid asserting implementation details, private fields, or line counts.
+- Structure specs in Arrange → Act → Assert order. Use minimal fixtures and shared helpers only when they remove obvious
+  duplication.
+- One reason to fail per test unless the scenario intentionally covers a full flow (e.g., acceptance tests).
 
-## Style Rules
+## Project Layout & Architecture
 
-- Write TypeScript that satisfies `tsc --noEmit` and linting defaults in `eslint.config.mjs`; the pipeline enforces
-  both.
-- Let Prettier control spacing (two spaces, single quotes). Never commit manual formatting.
-- Use `camelCase` for variables/functions, `PascalCase` for types/classes, `kebab-case` for filenames under `api` and
+- API entry points, controllers, and routing glue live in `src/api`. Clean Architecture boundaries under
+  `src/contexts/core/genially/{application,domain,infrastructure}` must stay intact: orchestration in application,
+  business rules in domain, IO concerns in infrastructure.
+- Specs belong in `tests/{api,genially}/{unit,integration,acceptance}`. Share helpers via `tests/shared` sparingly.
+- Avoid structural duplication: if behaviour is already covered by acceptance tests, new unit tests must add value, not
+  reassert the same structure.
+
+## Coding Standards
+
+- TypeScript must satisfy `tsc --noEmit` and `eslint`. Let Prettier format files; do not hand-tune spacing.
+- Naming: `camelCase` for variables/functions, `PascalCase` for classes/types, `kebab-case` for files under `api` and
   `contexts`.
-- Prefer the `@src/*`, `@contexts/*`, and related path aliases over relative paths.
+- Prefer the configured path aliases (`@api/*`, `@application/*`, `@domain/*`, etc.) over deep relative imports.
 
-## Testing Practice
+## Clean Code Guidance
 
-- Lead with black-box acceptance tests for new behaviour, back them with narrow integration tests against Mongo when
-  storage is involved, and close with focused unit tests around use cases or domain logic.
-- Mirror the runtime module name in the spec file (e.g., `RenameGeniallyController.test.ts` for the controller) and keep
-  fixtures minimal, resetting shared state in `beforeEach` hooks.
-- Default to in-memory repositories; switch to the Mongo implementation only when verifying persistence boundaries.
+- Drive APIs from tests: controllers adapt HTTP to/from application services; repositories expose pure persistence
+  operations; domain objects encapsulate behaviour without IO.
+- Keep functions and classes small and cohesive. Favour composition over inheritance. Apply SOLID, DRY, KISS, and
+  YAGNI.
+- Be explicit about side effects, avoid hidden mutations, and remove dead code promptly.
+- Call out risks early: missing validation, security pitfalls (injection, leaked secrets), performance issues (N+1,
+  excessive allocations).
+- Prefer focused, incremental diffs that are easy to review and revert.
 
-### Testing Principles
+## Tooling & Safety
 
-- Keep specs fast, deterministic, and isolated; use the Arrange → Act → Assert structure to maximise readability.
-- Assert observable behaviour, not internal structure, so refactors do not break tests.
-- Make tests easy to write and maintain: descriptive names, focused assertions, compact fixtures, and shared helpers
-  only
-  when they remove duplication.
-- Prefer a single failure reason per test unless the scenario intentionally covers a wider flow (e.g., acceptance).
-
-## TDD Rhythm
-
-- Start every change by writing a failing test that explains the desired behaviour; do not add production code until it
-  fails for the expected reason.
-- When you need a red test, add or adjust the spec first; never touch production code (or reuse existing passing tests)
-  to force a failure. The test must lead the change.
-- The only acceptable exceptions are non-production artefacts (configuration files, Makefiles, documentation). If you
-  touch application code without coverage, undo the change (git checkout/revert for committed work or git stash for
-  local edits), add the failing test, and only then reapply the production change once the new test has gone red.
-- Make the test pass with the smallest production change possible, keeping modifications inside the correct Clean
-  Architecture layer.
-- Refactor production and test code together, looking for better names, extracted patterns, or design improvements.
-  Decide the next red test before exiting the refactor step.
-
-## Workflow Expectations
-
-- Work in small, reversible steps. After each step run format, lint, and tests as stated above.
-- If tooling modifies files (Prettier, ESLint), stage those edits together with the feature change.
-- Write Conventional Commit messages (`feat:`, `fix:`, `test:`, etc.) in imperative mood and under 72 characters.
-- Open pull requests with a short summary, validation checklist, and any required environment or migration notes.
-
-## Design Guidance
-
-- Let tests shape API and module boundaries; never add production code without a failing test first.
-- Keep classes and functions small, cohesive, and single-responsibility; favor composition over inheritance to control
-  coupling.
-- Apply SOLID, DRY, KISS, and YAGNI; depend on abstractions (ports/adapters) to preserve Clean Architecture seams.
-- Refactor continuously: extract or inline logic, rename for clarity, introduce parameter objects, remove dead code, and
-  make side effects explicit.
-- Maximize testability with pure functions where possible, explicit seams, and minimal global state.
-- Call out risks early: likely bugs, security pitfalls (injection, secrets, unsafe defaults), and performance hot spots
-  (N+1 queries, heavy allocations).
-- Prefer focused, incremental diffs over sweeping rewrites, so changes are straightforward to review and revert.
-
-## Config & Safety
-
-- Copy `.env.example` to `.env` before running the API (`cp .env.example .env`). Do not commit secrets.
-- Verify local setup via `make show-env` and the Makefile Mongo health pings before debugging connection issues. Keep
-  Docker credentials out of logs.
+- Run `make onboarding` once to install dependencies and set up hooks. Use `make docker-up`/`make docker-stop` to manage
+  the local stack. `npm run dev` for development, `npm run build` for production artefacts.
+- Always execute, in order, `npm run format`, `npm run lint`, and the relevant Jest suites after making changes. If any
+  step fails, fix it and rerun from the top.
+- Copy `.env.example` to `.env` before running the API. Do not commit secrets.
+- When using the CodeRabbit target, ensure the configuration file exists or let the command fall back to defaults as
+  configured in the Makefile.

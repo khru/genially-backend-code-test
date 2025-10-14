@@ -8,18 +8,18 @@ type MockService<T extends (...args: never[]) => unknown> = {
 };
 
 const createResponse = () => {
-  const res: Partial<Response> & { statusCode?: number; body?: unknown } = {};
-  res.status = jest.fn((code: number) => {
-    res.statusCode = code;
-    return res as Response;
+  const response: Partial<Response> & { statusCode?: number; body?: unknown } = {};
+  response.status = jest.fn((code: number) => {
+    response.statusCode = code;
+    return response as Response;
   }) as Response["status"];
-  res.json = jest.fn((payload: unknown) => {
-    res.body = payload;
-    return res as Response;
+  response.json = jest.fn((payload: unknown) => {
+    response.body = payload;
+    return response as Response;
   }) as Response["json"];
-  res.contentType = jest.fn(() => res as Response) as Response["contentType"];
-  res.send = jest.fn(() => res as Response) as Response["send"];
-  return res as Response & { statusCode?: number; body?: unknown };
+  response.contentType = jest.fn(() => response as Response) as Response["contentType"];
+  response.send = jest.fn(() => response as Response) as Response["send"];
+  return response as Response & { statusCode?: number; body?: unknown };
 };
 
 describe("Genially controllers error handling", () => {

@@ -5,7 +5,7 @@ import GeniallyNotExist from "@domain/exception/GeniallyNotExist";
 import { GeniallyCount } from "@domain/GeniallyCount";
 import { Clock } from "@domain/Clock";
 
-type GeniallyDoc = {
+export type GeniallyDoc = {
   _id: string;
   name: string;
   description?: string | null;
@@ -14,7 +14,7 @@ type GeniallyDoc = {
   deletedAt?: Date | null;
 };
 
-const toDocument = (genially: Genially): GeniallyDoc => {
+export const toDocument = (genially: Genially): GeniallyDoc => {
   const primitives = genially.toPrimitives();
   return {
     _id: primitives.id,
@@ -26,7 +26,7 @@ const toDocument = (genially: Genially): GeniallyDoc => {
   };
 };
 
-const fromDocument = (clock: Clock, doc: GeniallyDoc): Genially => {
+export const fromDocument = (clock: Clock, doc: GeniallyDoc): Genially => {
   return Genially.fromPrimitives(clock, {
     id: doc._id,
     name: doc.name,
