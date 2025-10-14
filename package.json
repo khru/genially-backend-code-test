@@ -8,6 +8,7 @@
     "build": "npm run build-ts && tsc-alias && npm run lint",
     "dev": "cross-env --env-file=.env NODE_ENV=dev ts-node-dev -r tsconfig-paths/register --ignore-watch node_modules --inspect=0.0.0.0:9267 ./src/api/server.ts",
     "lint": "tsc --noEmit && eslint . --fix",
+    "lint-staged": "lint-staged",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "serve-debug": "nodemon --inspect dist/server.js",
