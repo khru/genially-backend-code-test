@@ -51,7 +51,8 @@
 - When you need a red test, add or adjust the spec first; never touch production code (or reuse existing passing tests)
   to force a failure. The test must lead the change.
 - The only acceptable exceptions are non-production artefacts (configuration files, Makefiles, documentation). If you
-  touch application code without coverage, back up, add the missing test, then continue.
+  touch application code without coverage, undo the change (git checkout/revert for committed work or git stash for
+  local edits), add the failing test, and only then reapply the production change once the new test has gone red.
 - Make the test pass with the smallest production change possible, keeping modifications inside the correct Clean
   Architecture layer.
 - Refactor production and test code together, looking for better names, extracted patterns, or design improvements.
