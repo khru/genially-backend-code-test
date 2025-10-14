@@ -48,6 +48,10 @@
 
 - Start every change by writing a failing test that explains the desired behaviour; do not add production code until it
   fails for the expected reason.
+- When you need a red test, add or adjust the spec first; never touch production code (or reuse existing passing tests)
+  to force a failure. The test must lead the change.
+- The only acceptable exceptions are non-production artefacts (configuration files, Makefiles, documentation). If you
+  touch application code without coverage, back up, add the missing test, then continue.
 - Make the test pass with the smallest production change possible, keeping modifications inside the correct Clean
   Architecture layer.
 - Refactor production and test code together, looking for better names, extracted patterns, or design improvements.

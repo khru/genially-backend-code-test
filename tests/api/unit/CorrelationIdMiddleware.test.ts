@@ -9,15 +9,15 @@ import { randomUUID } from "crypto";
 const randomUUIDMock = randomUUID as jest.MockedFunction<typeof randomUUID>;
 
 const createResponse = () => {
-  const res: Partial<Response> & { locals: { correlationId?: string }; headers: Record<string, string> } = {
+  const response: Partial<Response> & { locals: { correlationId?: string }; headers: Record<string, string> } = {
     locals: {},
     headers: {},
   };
-  res.setHeader = jest.fn((key: string, value: string) => {
-    res.headers[key] = value;
-    return res as Response;
-  });
-  return res as Response<unknown, { correlationId: string }> & {
+  response.setHeader = jest.fn((key: string, value: string) => {
+    response.headers[key] = value;
+    return response as Response;
+  }) as unknown as Response["setHeader"];
+  return response as Response<unknown, { correlationId: string }> & {
     headers: Record<string, string>;
   };
 };
@@ -33,7 +33,7 @@ afterEach(() => {
 
 describe("correlationId middleware", () => {
   it("generates a correlation id when header is missing", () => {
-    randomUUIDMock.mockReturnValue("12345678-1234-4321-abcd-123456789abc");
+    randomUUIDMock.mockReturnValue("12345678-1234-4321-abcd-123456789abc" as ReturnType<typeof randomUUID>);
     const req = createRequest();
     const res = createResponse();
     const next = jest.fn();
@@ -60,7 +60,7 @@ describe("correlationId middleware", () => {
   });
 
   it("drops whitespace-only header and generates a new id", () => {
-    randomUUIDMock.mockReturnValue("12345678-1234-4321-abcd-123456789abd");
+    randomUUIDMock.mockReturnValue("12345678-1234-4321-abcd-123456789abd" as ReturnType<typeof randomUUID>);
     const req = createRequest("");
     const res = createResponse();
     const next = jest.fn();

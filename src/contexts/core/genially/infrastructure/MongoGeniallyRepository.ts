@@ -14,6 +14,29 @@ type GeniallyDoc = {
   deletedAt?: Date | null;
 };
 
+const toDocument = (genially: Genially): GeniallyDoc => {
+  const primitives = genially.toPrimitives();
+  return {
+    _id: primitives.id,
+    name: primitives.name,
+    description: primitives.description ?? null,
+    createdAt: primitives.createdAt,
+    modifiedAt: primitives.modifiedAt ?? null,
+    deletedAt: primitives.deletedAt ?? null,
+  };
+};
+
+const fromDocument = (clock: Clock, doc: GeniallyDoc): Genially => {
+  return Genially.fromPrimitives(clock, {
+    id: doc._id,
+    name: doc.name,
+    description: doc.description ?? undefined,
+    createdAt: doc.createdAt,
+    modifiedAt: doc.modifiedAt ?? undefined,
+    deletedAt: doc.deletedAt ?? undefined,
+  });
+};
+
 export default class MongoGeniallyRepository implements GeniallyRepository {
   private readonly geniallyCollection: Collection<GeniallyDoc>;
   private readonly clock: Clock;
@@ -24,15 +47,7 @@ export default class MongoGeniallyRepository implements GeniallyRepository {
   }
 
   async save(genially: Genially): Promise<void> {
-    const primitives = genially.toPrimitives();
-    const doc: GeniallyDoc = {
-      _id: primitives.id,
-      name: primitives.name,
-      description: primitives.description ?? null,
-      createdAt: primitives.createdAt,
-      modifiedAt: primitives.modifiedAt ?? null,
-      deletedAt: primitives.deletedAt ?? null,
-    };
+    const doc = toDocument(genially);
     await this.geniallyCollection.updateOne({ _id: doc._id }, { $set: doc }, { upsert: true });
   }
 
@@ -40,14 +55,7 @@ export default class MongoGeniallyRepository implements GeniallyRepository {
     const geniallyDocument = await this.geniallyCollection.findOne({ _id: id });
     if (!geniallyDocument) throw new GeniallyNotExist(id);
 
-    return Genially.fromPrimitives(this.clock, {
-      id: geniallyDocument._id,
-      name: geniallyDocument.name,
-      description: geniallyDocument.description ?? undefined,
-      createdAt: geniallyDocument.createdAt,
-      modifiedAt: geniallyDocument.modifiedAt ?? undefined,
-      deletedAt: geniallyDocument.deletedAt ?? undefined,
-    });
+    return fromDocument(this.clock, geniallyDocument);
   }
 
   async countCreated(): Promise<GeniallyCount> {

@@ -8,6 +8,7 @@ import { SystemClock } from "@infrastructure/SystemClock";
 import CreateGeniallyService from "@application/CreateGeniallyService";
 import DeleteGeniallyService from "@application/DeleteGeniallyService";
 import RenameGeniallyService from "@application/RenameGeniallyService";
+import { GeniallyFactory } from "@application/GeniallyFactory";
 
 import { createGeniallyControllerFactory } from "@controllers/create-genially";
 import { deleteGeniallyControllerFactory } from "@controllers/delete-genially";
@@ -40,6 +41,7 @@ export async function buildContainer(config?: AppConfig): Promise<{
   await db.command({ ping: 1 });
 
   const clock = new SystemClock();
+  const geniallyFactory = new GeniallyFactory(clock);
   const repository = new MongoGeniallyRepository(assertDb(db), clock, appConfig.database.collection);
 
   container.register({
@@ -49,6 +51,7 @@ export async function buildContainer(config?: AppConfig): Promise<{
     db: asValue(db),
     geniallyRepository: asValue(repository),
     clock: asValue(clock),
+    geniallyFactory: asValue(geniallyFactory),
 
     // Services
     createGeniallyService: asClass(CreateGeniallyService).scoped(),

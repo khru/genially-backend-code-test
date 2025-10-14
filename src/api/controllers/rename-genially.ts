@@ -1,10 +1,8 @@
 import { Request, Response } from "express";
 import RenameGeniallyService from "@application/RenameGeniallyService";
 
-import { InvalidGeniallyNameError } from "@domain/exception/InvalidGeniallyNameError";
-import GeniallyAlreadyDeleted from "@domain/exception/GeniallyAlreadyDeleted";
-import GeniallyNotExist from "@domain/exception/GeniallyNotExist";
 import { createGeniallyResponse, GeniallyResponse } from "@infrastructure/responses/GeniallyResponse";
+import { handleGeniallyError } from "@controllers/genially-error-mapper";
 
 export function renameGeniallyControllerFactory(renameGeniallyService: RenameGeniallyService) {
   return async (request: Request, response: Response) => {
@@ -19,17 +17,7 @@ export function renameGeniallyControllerFactory(renameGeniallyService: RenameGen
       const body: GeniallyResponse = createGeniallyResponse(genially);
       return response.status(200).json(body);
     } catch (error) {
-      if (error instanceof InvalidGeniallyNameError) {
-        return response.status(400).json({ error: error.message });
-      }
-
-      if (error instanceof GeniallyNotExist) {
-        return response.status(404).json({ error: error.message });
-      }
-
-      if (error instanceof GeniallyAlreadyDeleted) {
-        return response.status(412).json({ error: error.message });
-      }
+      if (handleGeniallyError(response, error)) return;
 
       return response.status(500).json({ error: "Internal server error" });
     }

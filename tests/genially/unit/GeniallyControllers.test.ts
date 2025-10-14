@@ -12,13 +12,13 @@ const createResponse = () => {
   res.status = jest.fn((code: number) => {
     res.statusCode = code;
     return res as Response;
-  });
+  }) as Response["status"];
   res.json = jest.fn((payload: unknown) => {
     res.body = payload;
     return res as Response;
-  });
-  res.contentType = jest.fn(() => res as Response);
-  res.send = jest.fn(() => res as Response);
+  }) as Response["json"];
+  res.contentType = jest.fn(() => res as Response) as Response["contentType"];
+  res.send = jest.fn(() => res as Response) as Response["send"];
   return res as Response & { statusCode?: number; body?: unknown };
 };
 

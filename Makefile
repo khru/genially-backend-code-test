@@ -17,6 +17,8 @@ export
 NODE_PORT ?= 3000
 HEALTH_URL ?= http://localhost:$(NODE_PORT)/
 
+CODERABBIT_BASE_BRANCH ?= main
+
 # Mongo defaults for local usage; override via .env if you wish
 MONGO_HOST ?= localhost
 MONGO_PORT ?= 27017
@@ -536,12 +538,13 @@ coderabbit-check: ## Verify CodeRabbit CLI is installed
 	@echo "✅ CodeRabbit CLI available"
 
 .PHONY: coderabbit-review
-coderabbit-review: ## Review uncommitted changes with CodeRabbit (base=main)
+coderabbit-review: ## Review uncommitted changes with CodeRabbit (base=$(CODERABBIT_BASE_BRANCH))
 	$(CHECK_CODERABBIT)
 	@set -e
-	@if [ ! -f "$(REPO_ROOT)/.coderabbit.yaml" ]; then \
-	  echo "⚠️  .coderabbit.yaml not found at repo root; proceeding with defaults."; \
+	@echo "🤖 CodeRabbit reviewing uncommitted changes against '$(CODERABBIT_BASE_BRANCH)'…"
+	@if [ -f "$(REPO_ROOT)/.coderabbit.yaml" ]; then \
+	  coderabbit --type uncommitted --base $(CODERABBIT_BASE_BRANCH) -c .coderabbit.yaml --plain; \
+	else \
+	  echo "⚠️  .coderabbit.yaml not found; using CodeRabbit defaults."; \
+	  coderabbit --type uncommitted --base $(CODERABBIT_BASE_BRANCH) --plain; \
 	fi
-	@echo "🤖 CodeRabbit reviewing uncommitted changes against 'main'…"
-	coderabbit --type uncommitted --base main -c .coderabbit.yaml --plain
-

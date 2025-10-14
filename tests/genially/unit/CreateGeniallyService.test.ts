@@ -1,4 +1,5 @@
 import CreateGeniallyService from "@application/CreateGeniallyService";
+import { GeniallyFactory } from "@application/GeniallyFactory";
 import InMemoryGeniallyRepository from "@infrastructure/InMemoryGeniallyRepository";
 import { createDynamicClock, createFixedClock } from "@tests/shared/clock";
 
@@ -7,7 +8,7 @@ describe("CreateGeniallyService", () => {
     const fixedDate = new Date("2024-01-01T00:00:00.000Z");
     const clock = createFixedClock(fixedDate);
     const repository = new InMemoryGeniallyRepository();
-    const service = new CreateGeniallyService(clock, repository);
+    const service = new CreateGeniallyService(new GeniallyFactory(clock), repository);
     const id = "id-clock";
 
     const genially = await service.execute({ id: id, name: "Clock Name" });
@@ -21,7 +22,7 @@ describe("CreateGeniallyService", () => {
   it("accepts an optional description", async () => {
     const repository = new InMemoryGeniallyRepository();
     const clock = createDynamicClock();
-    const service = new CreateGeniallyService(clock, repository);
+    const service = new CreateGeniallyService(new GeniallyFactory(clock), repository);
     const id = "id-optional-description";
 
     const genially = await service.execute({ id: id, name: "Optional Description" });
