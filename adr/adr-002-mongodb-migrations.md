@@ -19,7 +19,7 @@
 ## Detailed Comparison (Trade-offs)
 
 | Criterion                   | Liquibase + Mongo                        | migrate-mongo (Node CLI)                       | Mongock (code-first)              |
-|-----------------------------|------------------------------------------|------------------------------------------------|-----------------------------------|
+| --------------------------- | ---------------------------------------- | ---------------------------------------------- | --------------------------------- |
 | **Type**                    | YAML/JSON/XML files                      | JS/TS files with `up/down`                     | Kotlin/Java code with annotations |
 | **Entity Decoupling**       | Total                                    | Total                                          | Partial (code-bound)              |
 | **History & Versioning**    | `DATABASECHANGELOG` + checksums          | Changelog collection (no checksums by default) | `mongockChangeLog`                |

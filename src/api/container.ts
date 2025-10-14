@@ -3,6 +3,7 @@ import { asClass, asFunction, asValue, AwilixContainer, createContainer, Injecti
 import type { AppConfig } from "@configuration/app-config";
 import { configFromEnv } from "@configuration/config-from-env";
 import MongoGeniallyRepository from "@infrastructure/MongoGeniallyRepository";
+import { SystemClock } from "@infrastructure/SystemClock";
 
 import CreateGeniallyService from "@application/CreateGeniallyService";
 import DeleteGeniallyService from "@application/DeleteGeniallyService";
@@ -19,9 +20,7 @@ type DbT = import("mongodb").Db;
 
 function assertDb(db?: DbT): DbT {
   if (!db) {
-    throw new Error(
-      "[DI] Mongo persistence selected but database connection isn't initialized"
-    );
+    throw new Error("[DI] Mongo persistence selected but database connection isn't initialized");
   }
   return db;
 }
@@ -31,16 +30,17 @@ export async function buildContainer(config?: AppConfig): Promise<{
   dispose: () => Promise<void>;
 }> {
   const appConfig = config ?? configFromEnv();
-  const container = createContainer({injectionMode: InjectionMode.CLASSIC});
+  const container = createContainer({ injectionMode: InjectionMode.CLASSIC });
 
-  const {MongoClient} = await import("mongodb");
+  const { MongoClient } = await import("mongodb");
   const client: MongoClientT = new MongoClient(appConfig.database.uri);
   await client.connect();
   const db: DbT = client.db(appConfig.database.dbName);
 
-  await db.command({ping: 1});
+  await db.command({ ping: 1 });
 
-  const repository = new MongoGeniallyRepository(assertDb(db), appConfig.database.collection);
+  const clock = new SystemClock();
+  const repository = new MongoGeniallyRepository(assertDb(db), clock, appConfig.database.collection);
 
   container.register({
     // Values
@@ -48,6 +48,7 @@ export async function buildContainer(config?: AppConfig): Promise<{
     dbClient: asValue(client),
     db: asValue(db),
     geniallyRepository: asValue(repository),
+    clock: asValue(clock),
 
     // Services
     createGeniallyService: asClass(CreateGeniallyService).scoped(),
@@ -70,5 +71,5 @@ export async function buildContainer(config?: AppConfig): Promise<{
     }
   };
 
-  return {container, dispose};
+  return { container, dispose };
 }

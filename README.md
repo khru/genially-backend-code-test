@@ -21,7 +21,7 @@ The development has already started but our teammate has gone on a well-deserved
 work, implementing some features defined by our product team. Fortunately, our team documented the project structure:
 
 | Name                           | Description                                                                                                                                             |
-|--------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **src**                        | Contains source code that will be compiled to the dist dir                                                                                              |
 | **src/api**                    | Contains source code related to express api                                                                                                             |
 | **src/api**/server.ts          | Entry point to express api                                                                                                                              |
@@ -37,7 +37,7 @@ work, implementing some features defined by our product team. Fortunately, our t
 Additionally, each module of a bounded context is organized in different layers:
 
 | Name               | Description                                                                                        |
-|--------------------|----------------------------------------------------------------------------------------------------|
+| ------------------ | -------------------------------------------------------------------------------------------------- |
 | **application**    | Contains application services (i.e. use cases) that communicate with our domain                    |
 | **domain**         | Contains building blocks that conform our domain                                                   |
 | **infrastructure** | Contains artifacts that interact with external world, such as a particular database or web service |

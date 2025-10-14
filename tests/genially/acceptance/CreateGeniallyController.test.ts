@@ -38,11 +38,7 @@ describe("Create Genially Controller", () => {
         description: "A random genially description",
       };
 
-      const response = await agent
-        .post("/genially")
-        .send(geniallyPayload)
-        .expect("Content-Type", /json/)
-        .expect(400);
+      const response = await agent.post("/genially").send(geniallyPayload).expect("Content-Type", /json/).expect(400);
 
       expect(response.body).toHaveProperty("error");
       expect(response.body.error).toContain("id");
@@ -108,12 +104,8 @@ describe("Create Genially Controller", () => {
         },
         expectRegex: /description.*125|exceed.*125/i,
       },
-    ])("$case", async ({payload, expectRegex}) => {
-      const res = await agent
-        .post("/genially")
-        .send(payload)
-        .expect("Content-Type", /json/)
-        .expect(400);
+    ])("$case", async ({ payload, expectRegex }) => {
+      const res = await agent.post("/genially").send(payload).expect("Content-Type", /json/).expect(400);
 
       expect(res.body).toHaveProperty("error");
       expect(res.body.error).toMatch(expectRegex);

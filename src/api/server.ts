@@ -3,7 +3,7 @@ import { createConfiguredApp } from "@api/create-configured-app";
 
 (async () => {
   try {
-    const {app, close} = await createConfiguredApp();
+    const { app, close } = await createConfiguredApp();
 
     app.use(errorHandler());
 

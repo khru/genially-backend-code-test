@@ -3,6 +3,7 @@ import Genially from "@domain/Genially";
 import GeniallyRepository from "@domain/GeniallyRepository";
 import GeniallyNotExist from "@domain/exception/GeniallyNotExist";
 import { GeniallyCount } from "@domain/GeniallyCount";
+import { Clock } from "@domain/Clock";
 
 type GeniallyDoc = {
   _id: string;
@@ -15,9 +16,11 @@ type GeniallyDoc = {
 
 export default class MongoGeniallyRepository implements GeniallyRepository {
   private readonly geniallyCollection: Collection<GeniallyDoc>;
+  private readonly clock: Clock;
 
-  constructor(db: Db, collectionName = "geniallies") {
+  constructor(db: Db, clock: Clock, collectionName = "geniallies") {
     this.geniallyCollection = db.collection<GeniallyDoc>(collectionName);
+    this.clock = clock;
   }
 
   async save(genially: Genially): Promise<void> {
@@ -37,7 +40,7 @@ export default class MongoGeniallyRepository implements GeniallyRepository {
     const geniallyDocument = await this.geniallyCollection.findOne({ _id: id });
     if (!geniallyDocument) throw new GeniallyNotExist(id);
 
-    return Genially.fromPrimitives({
+    return Genially.fromPrimitives(this.clock, {
       id: geniallyDocument._id,
       name: geniallyDocument.name,
       description: geniallyDocument.description ?? undefined,

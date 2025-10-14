@@ -13,13 +13,12 @@ export async function createConfiguredApp(config?: AppConfig, opts?: { skipPersi
   if (opts?.skipPersistence) {
     return {
       app,
-      close: async () => {
-      }
+      close: async () => {},
     };
   }
 
-  const {container, dispose} = await buildContainer(config);
+  const { container, dispose } = await buildContainer(config);
   registerGeniallyRoutes(app, container);
 
-  return {app, close: dispose};
+  return { app, close: dispose };
 }

@@ -3,6 +3,7 @@ import Genially from "@domain/Genially";
 import { getAsyncError } from "@tests/shared/ErrorHandler";
 import GeniallyNotExist from "@domain/exception/GeniallyNotExist";
 import { GeniallyCount } from "@domain/GeniallyCount";
+import { createDynamicClock } from "@tests/shared/clock";
 
 describe("InMemoryGeniallyRepository", () => {
   let repository: InMemoryGeniallyRepository;
@@ -15,8 +16,8 @@ describe("InMemoryGeniallyRepository", () => {
     it("should update existing genially when saving with same id", async () => {
       // Arrange
       const id = "1";
-      const genially1 = new Genially(id, "First Genially");
-      const genially2 = new Genially(id, "Updated Genially");
+      const genially1 = new Genially(createDynamicClock(), id, "First Genially");
+      const genially2 = new Genially(createDynamicClock(), id, "Updated Genially");
 
       // Act
       expect(await repository.save(genially1));
@@ -51,7 +52,7 @@ describe("InMemoryGeniallyRepository", () => {
     it("should delete an existing Genially", async () => {
       // Arrange
       const id = "delete-success-id";
-      const genially = new Genially(id, "Name");
+      const genially = new Genially(createDynamicClock(), id, "Name");
       await repository.save(genially);
 
       // Act
@@ -80,15 +81,15 @@ describe("InMemoryGeniallyRepository", () => {
     });
 
     it("should return the number of saved geniallys (distinct ids)", async () => {
-      await repository.save(new Genially("first-id", "first-name"));
-      await repository.save(new Genially("second-id", "second-name"));
+      await repository.save(new Genially(createDynamicClock(), "first-id", "first-name"));
+      await repository.save(new Genially(createDynamicClock(), "second-id", "second-name"));
 
       expect(await repository.countCreated()).toEqual(new GeniallyCount(2));
     });
 
     it("does not decrease after a soft delete", async () => {
       const id = "id-soft-delete";
-      await repository.save(new Genially(id, "name to delete"));
+      await repository.save(new Genially(createDynamicClock(), id, "name to delete"));
 
       const before = await repository.countCreated();
       await repository.delete(id);
@@ -99,10 +100,10 @@ describe("InMemoryGeniallyRepository", () => {
 
     it("should not increase the counter when updating the same genially", async () => {
       const id = "id-upsert";
-      await repository.save(new Genially(id, "first-name"));
+      await repository.save(new Genially(createDynamicClock(), id, "first-name"));
       const before = await repository.countCreated();
 
-      await repository.save(new Genially(id, "updated-name"));
+      await repository.save(new Genially(createDynamicClock(), id, "updated-name"));
       const after = await repository.countCreated();
 
       expect(after).toEqual(before);
@@ -113,8 +114,8 @@ describe("InMemoryGeniallyRepository", () => {
     it("throws NotExist if the id is missing even when other items exist", async () => {
       // Arrange
       const unknownId = "c";
-      await repository.save(new Genially("first-id", "first-name"));
-      await repository.save(new Genially("second-id", "second-name"));
+      await repository.save(new Genially(createDynamicClock(), "first-id", "first-name"));
+      await repository.save(new Genially(createDynamicClock(), "second-id", "second-name"));
 
       // Act
       const error = await getAsyncError<GeniallyNotExist>(async () => {
@@ -127,8 +128,8 @@ describe("InMemoryGeniallyRepository", () => {
 
     it("returns the item whose id matches", async () => {
       // Arrange
-      const firstGenially = new Genially("first-id", "first-name");
-      const secondGenially = new Genially("second-id", "second-name");
+      const firstGenially = new Genially(createDynamicClock(), "first-id", "first-name");
+      const secondGenially = new Genially(createDynamicClock(), "second-id", "second-name");
       await repository.save(firstGenially);
       await repository.save(secondGenially);
 

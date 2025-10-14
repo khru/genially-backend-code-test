@@ -35,6 +35,15 @@
   fixtures minimal, resetting shared state in `beforeEach` hooks.
 - Default to in-memory repositories; switch to the Mongo implementation only when verifying persistence boundaries.
 
+### Testing Principles
+
+- Keep specs fast, deterministic, and isolated; use the Arrange → Act → Assert structure to maximise readability.
+- Assert observable behaviour, not internal structure, so refactors do not break tests.
+- Make tests easy to write and maintain: descriptive names, focused assertions, compact fixtures, and shared helpers
+  only
+  when they remove duplication.
+- Prefer a single failure reason per test unless the scenario intentionally covers a wider flow (e.g., acceptance).
+
 ## TDD Rhythm
 
 - Start every change by writing a failing test that explains the desired behaviour; do not add production code until it
@@ -50,6 +59,19 @@
 - If tooling modifies files (Prettier, ESLint), stage those edits together with the feature change.
 - Write Conventional Commit messages (`feat:`, `fix:`, `test:`, etc.) in imperative mood and under 72 characters.
 - Open pull requests with a short summary, validation checklist, and any required environment or migration notes.
+
+## Design Guidance
+
+- Let tests shape API and module boundaries; never add production code without a failing test first.
+- Keep classes and functions small, cohesive, and single-responsibility; favor composition over inheritance to control
+  coupling.
+- Apply SOLID, DRY, KISS, and YAGNI; depend on abstractions (ports/adapters) to preserve Clean Architecture seams.
+- Refactor continuously: extract or inline logic, rename for clarity, introduce parameter objects, remove dead code, and
+  make side effects explicit.
+- Maximize testability with pure functions where possible, explicit seams, and minimal global state.
+- Call out risks early: likely bugs, security pitfalls (injection, secrets, unsafe defaults), and performance hot spots
+  (N+1 queries, heavy allocations).
+- Prefer focused, incremental diffs over sweeping rewrites, so changes are straightforward to review and revert.
 
 ## Config & Safety
 

@@ -1,20 +1,23 @@
 import Genially from "@domain/Genially";
 import GeniallyRepository from "@domain/GeniallyRepository";
+import { Clock } from "@domain/Clock";
 
 type CreateGeniallyServiceRequest = {
   id: string;
   name: string;
-  description: string;
+  description?: string;
 };
 
 export default class CreateGeniallyService {
-  constructor(private readonly geniallyRepository: GeniallyRepository) {
-  }
+  constructor(
+    private readonly clock: Clock,
+    private readonly geniallyRepository: GeniallyRepository,
+  ) {}
 
-  public async execute(req: CreateGeniallyServiceRequest): Promise<Genially> {
-    const {id, name, description} = req;
+  public async execute(request: CreateGeniallyServiceRequest): Promise<Genially> {
+    const { id, name, description } = request;
 
-    const genially = new Genially(id, name, description);
+    const genially = new Genially(this.clock, id, name, description);
 
     await this.geniallyRepository.save(genially);
 

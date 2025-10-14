@@ -5,11 +5,10 @@ type DeleteGeniallyServiceRequest = {
 };
 
 export default class DeleteGeniallyService {
-  constructor(private readonly geniallyRepository: GeniallyRepository) {
-  }
+  constructor(private readonly geniallyRepository: GeniallyRepository) {}
 
   public async execute(request: DeleteGeniallyServiceRequest): Promise<void> {
-    const {id} = request;
+    const { id } = request;
     await this.geniallyRepository.delete(id);
   }
 }

@@ -4,14 +4,13 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 import { buildContainer } from "@api/container";
 
 describe("DI Container bootstrap", () => {
-
   it("wires controllers with Mongo (ephemeral)", async () => {
     const mongodb = await MongoMemoryServer.create();
     const appConfig: AppConfig = {
-      database: {uri: mongodb.getUri(), dbName: "di-tests", collection: "geniallies"},
+      database: { uri: mongodb.getUri(), dbName: "di-tests", collection: "geniallies" },
     };
 
-    const {container, dispose} = await buildContainer(appConfig);
+    const { container, dispose } = await buildContainer(appConfig);
     const appFactory = async () => {
       const express = (await import("express")).default;
       const app = express();
@@ -24,18 +23,11 @@ describe("DI Container bootstrap", () => {
 
     const app = await appFactory();
     const id = `journey-${Date.now()}`;
-    await request(app).post("/genially")
-      .send({id, name: "a genially"})
-      .expect(201);
+    await request(app).post("/genially").send({ id, name: "a genially" }).expect(201);
 
-    await request(app)
-      .patch(`/genially/${id}`)
-      .send({name: "updated"})
-      .expect(200);
+    await request(app).patch(`/genially/${id}`).send({ name: "updated" }).expect(200);
 
-    await request(app)
-      .delete(`/genially/${id}`)
-      .expect(204);
+    await request(app).delete(`/genially/${id}`).expect(204);
 
     await dispose();
     await mongodb.stop();

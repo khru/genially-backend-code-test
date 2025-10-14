@@ -2,9 +2,7 @@
   "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
   "testRunner": "jest",
   "coverageAnalysis": "perTest",
-  "checkers": [
-    "typescript"
-  ],
+  "checkers": ["typescript"],
   "tsconfigFile": "tsconfig.json",
   "typescriptChecker": {
     "prioritizePerformanceOverAccuracy": true
@@ -33,9 +31,6 @@
     "Makefile",
     "**/*.md"
   ],
-  "reporters": [
-    "progress",
-    "clear-text"
-  ],
+  "reporters": ["progress", "clear-text"],
   "concurrency": 6
 }

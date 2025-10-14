@@ -19,7 +19,7 @@ export async function getAgent() {
     },
   };
 
-  const {app, close} = await createConfiguredApp(appConfig);
+  const { app, close } = await createConfiguredApp(appConfig);
   dispose = close;
   agent = request.agent(app);
   return agent;

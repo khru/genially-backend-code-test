@@ -1,4 +1,3 @@
 export class GeniallyCount {
-  constructor(readonly created: number) {
-  }
+  constructor(readonly created: number) {}
 }

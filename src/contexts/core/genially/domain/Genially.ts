@@ -2,6 +2,7 @@ import GeniallyValidationError from "@domain/exception/GeniallyValidationError";
 import GeniallyName from "@domain/GeniallyName";
 import GeniallyDescription from "@domain/GeniallyDescription";
 import GeniallyAlreadyDeleted from "@domain/exception/GeniallyAlreadyDeleted";
+import { Clock } from "@domain/Clock";
 
 export type UpdatableGenially = {
   id: string;
@@ -13,6 +14,7 @@ export type UpdatableGenially = {
 };
 
 export default class Genially {
+  private readonly clock: Clock;
   private readonly _id: string;
   private _name: GeniallyName;
   private readonly _description: GeniallyDescription;
@@ -23,7 +25,8 @@ export default class Genially {
   private readonly _validationErrors: string[] = [];
   private readonly thresholdErrors = 0;
 
-  constructor(id: string, name: string, description?: string) {
+  constructor(clock: Clock, id: string, name: string, description?: string) {
+    this.clock = clock;
     this._id = id;
 
     try {
@@ -38,7 +41,7 @@ export default class Genially {
       this._validationErrors.push(descriptionError.message);
     }
 
-    this._createdAt = new Date();
+    this._createdAt = this.clock.now();
 
     this.throwErrorsIfThereAre();
   }
@@ -75,7 +78,7 @@ export default class Genially {
 
   delete() {
     if (this._deletedAt) throw new GeniallyAlreadyDeleted(this._id);
-    this._deletedAt = new Date();
+    this._deletedAt = this.clock.now();
   }
 
   rename(newName: string) {
@@ -83,7 +86,7 @@ export default class Genially {
       throw new GeniallyAlreadyDeleted(this._id);
     }
     this._name = new GeniallyName(newName);
-    this._modifiedAt = new Date();
+    this._modifiedAt = this.clock.now();
   }
 
   toPrimitives(): UpdatableGenially {
@@ -97,9 +100,9 @@ export default class Genially {
     };
   }
 
-  static fromPrimitives(geniallyPrimitive: UpdatableGenially): Genially {
-    const genially = new Genially(geniallyPrimitive.id, geniallyPrimitive.name, geniallyPrimitive.description);
-    genially._createdAt = new Date(geniallyPrimitive.createdAt);
+  static fromPrimitives(clock: Clock, geniallyPrimitive: UpdatableGenially): Genially {
+    const genially = new Genially(clock, geniallyPrimitive.id, geniallyPrimitive.name, geniallyPrimitive.description);
+    genially._createdAt = geniallyPrimitive.createdAt ? new Date(geniallyPrimitive.createdAt) : undefined;
     genially._modifiedAt = geniallyPrimitive.modifiedAt ? new Date(geniallyPrimitive.modifiedAt) : undefined;
     genially._deletedAt = geniallyPrimitive.deletedAt ? new Date(geniallyPrimitive.deletedAt) : undefined;
     return genially;

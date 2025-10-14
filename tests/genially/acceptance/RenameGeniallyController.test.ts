@@ -13,15 +13,12 @@ describe("Rename Genially Controller", () => {
 
   it("PATCH /genially/:id renames an existing genially and sets modifiedAt (200)", async () => {
     // Arrange
-    await agent
-      .post("/genially")
-      .send({id: "rename-success-id", name: "Old Name", description: "ok"})
-      .expect(201);
+    await agent.post("/genially").send({ id: "rename-success-id", name: "Old Name", description: "ok" }).expect(201);
 
     // Act
     const response = await agent
       .patch("/genially/rename-success-id")
-      .send({name: "New Name"})
+      .send({ name: "New Name" })
       .expect("Content-Type", /json/)
       .expect(200);
 
@@ -34,16 +31,13 @@ describe("Rename Genially Controller", () => {
         createdAt: expect.any(String),
         modifiedAt: expect.any(String),
         deletedAt: null,
-      })
+      }),
     );
   });
 
   it("PATCH /genially/:id returns 400 when name is missing", async () => {
     // Arrange
-    await agent
-      .post("/genially")
-      .send({id: "rename-missing-name-id", name: "Old Name"})
-      .expect(201);
+    await agent.post("/genially").send({ id: "rename-missing-name-id", name: "Old Name" }).expect(201);
 
     // Act
     const response = await agent
@@ -58,15 +52,15 @@ describe("Rename Genially Controller", () => {
   });
 
   it.each([
-    {case: "too short", payload: {name: "ab"}, match: /3.*20/i},
-    {case: "too long", payload: {name: "a".repeat(21)}, match: /3.*20/i},
-    {case: "empty string", payload: {name: ""}, match: /empty|name/i},
-    {case: "whitespace only", payload: {name: "   "}, match: /empty|name/i},
-  ])("PATCH /genially/:id returns 400 when name is invalid ($case)", async ({payload, match}) => {
+    { case: "too short", payload: { name: "ab" }, match: /3.*20/i },
+    { case: "too long", payload: { name: "a".repeat(21) }, match: /3.*20/i },
+    { case: "empty string", payload: { name: "" }, match: /empty|name/i },
+    { case: "whitespace only", payload: { name: "   " }, match: /empty|name/i },
+  ])("PATCH /genially/:id returns 400 when name is invalid ($case)", async ({ payload, match }) => {
     // Arrange
     await agent
       .post("/genially")
-      .send({id: `rename-invalid-${payload.name || "blank"}-id`, name: "Old Name"})
+      .send({ id: `rename-invalid-${payload.name || "blank"}-id`, name: "Old Name" })
       .expect(201);
 
     // Act
@@ -85,7 +79,7 @@ describe("Rename Genially Controller", () => {
     // Act
     const response = await agent
       .patch("/genially/non-existent-id-for-rename")
-      .send({name: "Whatever"})
+      .send({ name: "Whatever" })
       .expect("Content-Type", /json/)
       .expect(404);
 
@@ -96,19 +90,14 @@ describe("Rename Genially Controller", () => {
 
   it("PATCH /genially/:id returns 412 when the genially is already deleted", async () => {
     // Arrange
-    await agent
-      .post("/genially")
-      .send({id: "rename-deleted-id", name: "Old Name"})
-      .expect(201);
+    await agent.post("/genially").send({ id: "rename-deleted-id", name: "Old Name" }).expect(201);
 
-    await agent
-      .delete("/genially/rename-deleted-id")
-      .expect(204);
+    await agent.delete("/genially/rename-deleted-id").expect(204);
 
     // Act
     const response = await agent
       .patch("/genially/rename-deleted-id")
-      .send({name: "New Name"})
+      .send({ name: "New Name" })
       .expect("Content-Type", /json/)
       .expect(412);
 

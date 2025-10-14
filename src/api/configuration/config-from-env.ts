@@ -80,12 +80,12 @@ export class ConfigFactory {
     password: string;
     authSource: string;
   }): string {
-    const {host, port, dbName, username, password, authSource} = params;
+    const { host, port, dbName, username, password, authSource } = params;
     return `mongodb://${ConfigFactory.credentialsSegment(username, password)}${host}:${port}/${dbName}${ConfigFactory.authQuery(authSource)}`;
   }
 
   private static buildMongoUriNoAuth(params: { host: string; port: string; dbName: string }): string {
-    const {host, port, dbName} = params;
+    const { host, port, dbName } = params;
     return `mongodb://${host}:${port}/${dbName}`;
   }
 
@@ -102,19 +102,19 @@ export class ConfigFactory {
       ? providedUri
       : ConfigFactory.shouldUseMongoAuth(sourceEnv)
         ? ConfigFactory.buildMongoUriWithAuth({
-          host,
-          port,
-          dbName,
-          username: resolved[EnvVar.MONGO_USERNAME],
-          password: resolved[EnvVar.MONGO_PASSWORD],
-          authSource: resolved[EnvVar.MONGO_AUTH_SOURCE],
-        })
-        : ConfigFactory.buildMongoUriNoAuth({host, port, dbName});
+            host,
+            port,
+            dbName,
+            username: resolved[EnvVar.MONGO_USERNAME],
+            password: resolved[EnvVar.MONGO_PASSWORD],
+            authSource: resolved[EnvVar.MONGO_AUTH_SOURCE],
+          })
+        : ConfigFactory.buildMongoUriNoAuth({ host, port, dbName });
 
     const collection = resolved[EnvVar.MONGO_COLLECTION];
 
     return {
-      database: {uri, dbName, collection},
+      database: { uri, dbName, collection },
     };
   }
 
