@@ -3,7 +3,6 @@ import { Db, MongoClient } from "mongodb";
 
 import Genially from "@domain/Genially";
 import GeniallyNotExist from "@domain/exception/GeniallyNotExist";
-import GeniallyAlreadyDeleted from "@domain/exception/GeniallyAlreadyDeleted";
 import MongoGeniallyRepository from "@infrastructure/MongoGeniallyRepository";
 import { GeniallyCount } from "@domain/GeniallyCount";
 import { SystemClock } from "@infrastructure/SystemClock";
@@ -83,66 +82,52 @@ describe("MongoGeniallyRepository", () => {
     await expect(mongoGeniallyRepository.find("missing-id")).rejects.toThrow(GeniallyNotExist);
   });
 
-  describe("delete", () => {
-    it("should only update the deletedAt", async () => {
-      const id = "an-id-to-delete";
-      await mongoGeniallyRepository.save(new Genially(clock, id, "to delete", "ok"));
-
-      await mongoGeniallyRepository.delete(id);
-
-      const genially = await mongoGeniallyRepository.find(id);
-      expect(genially.deletedAt).toBeInstanceOf(Date);
+  describe("countCreated", () => {
+    it("returns 0 when collection is empty", async () => {
+      expect(await mongoGeniallyRepository.countCreated()).toEqual(new GeniallyCount(0));
     });
 
-    it("should throw GeniallyNotExist when trying to delete an unknown id", async () => {
-      await expect(mongoGeniallyRepository.delete("unknown-id")).rejects.toThrow(GeniallyNotExist);
+    it("returns the number of documents after saving distinct ids", async () => {
+      await mongoGeniallyRepository.save(new Genially(clock, "fist-id", "first-name"));
+      await mongoGeniallyRepository.save(new Genially(clock, "second-id", "second-name"));
+
+      expect(await mongoGeniallyRepository.countCreated()).toEqual(new GeniallyCount(2));
     });
 
-    it("should throw a GeniallyAlreadyDeleted when deleted twice", async () => {
-      const id = "id-to-delete-twice";
-      const genially = new Genially(clock, id, "to delete twice");
+    it("does not decrease after a soft delete", async () => {
+      const id = "to-soft-delete";
+      const genially = new Genially(clock, id, "will be deleted");
       await mongoGeniallyRepository.save(genially);
 
-      await mongoGeniallyRepository.delete(id);
-      await expect(mongoGeniallyRepository.delete(id)).rejects.toThrow(GeniallyAlreadyDeleted);
+      const before = await mongoGeniallyRepository.countCreated();
+      genially.delete();
+      await mongoGeniallyRepository.save(genially);
+      const after = await mongoGeniallyRepository.countCreated();
 
-      const geniallyFound = await mongoGeniallyRepository.find(id);
-      expect(geniallyFound!.deletedAt).toBeInstanceOf(Date);
+      expect(after).toEqual(before);
     });
 
-    describe("countCreated", () => {
-      it("returns 0 when collection is empty", async () => {
-        expect(await mongoGeniallyRepository.countCreated()).toEqual(new GeniallyCount(0));
-      });
+    it("does not increase the count when updating the same id", async () => {
+      await mongoGeniallyRepository.save(new Genially(clock, "fist-id", "first-name"));
+      const before = await mongoGeniallyRepository.countCreated();
 
-      it("returns the number of documents after saving distinct ids", async () => {
-        await mongoGeniallyRepository.save(new Genially(clock, "fist-id", "first-name"));
-        await mongoGeniallyRepository.save(new Genially(clock, "second-id", "second-name"));
+      await mongoGeniallyRepository.save(new Genially(clock, "fist-id", "updated-name"));
+      const after = await mongoGeniallyRepository.countCreated();
 
-        expect(await mongoGeniallyRepository.countCreated()).toEqual(new GeniallyCount(2));
-      });
-
-      it("does not decrease after a soft delete", async () => {
-        const id = "to-soft-delete";
-        await mongoGeniallyRepository.save(new Genially(clock, id, "will be deleted"));
-
-        const before = await mongoGeniallyRepository.countCreated();
-        await mongoGeniallyRepository.delete(id);
-        const after = await mongoGeniallyRepository.countCreated();
-
-        expect(after).toEqual(before);
-      });
-
-      it("does not increase the count when updating the same id", async () => {
-        await mongoGeniallyRepository.save(new Genially(clock, "fist-id", "first-name"));
-        const before = await mongoGeniallyRepository.countCreated();
-
-        await mongoGeniallyRepository.save(new Genially(clock, "fist-id", "updated-name"));
-        const after = await mongoGeniallyRepository.countCreated();
-
-        expect(after).toEqual(before);
-      });
+      expect(after).toEqual(before);
     });
+  });
+
+  it("persists deletedAt when a deleted genially is saved", async () => {
+    const id = "an-id-to-delete";
+    const genially = new Genially(clock, id, "to delete", "ok");
+    await mongoGeniallyRepository.save(genially);
+
+    genially.delete();
+    await mongoGeniallyRepository.save(genially);
+
+    const stored = await mongoGeniallyRepository.find(id);
+    expect(stored.deletedAt).toBeInstanceOf(Date);
   });
 
   // New: default collection name used when none is provided

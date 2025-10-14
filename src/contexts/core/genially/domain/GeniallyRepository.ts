@@ -6,8 +6,6 @@ interface GeniallyRepository {
 
   find(id: string): Promise<Genially>;
 
-  delete(id: string): Promise<void>;
-
   countCreated(): Promise<GeniallyCount>;
 }
 

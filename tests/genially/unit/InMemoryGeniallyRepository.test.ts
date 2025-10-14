@@ -48,33 +48,6 @@ describe("InMemoryGeniallyRepository", () => {
     });
   });
 
-  describe("delete", () => {
-    it("should delete an existing Genially", async () => {
-      // Arrange
-      const id = "delete-success-id";
-      const genially = new Genially(createDynamicClock(), id, "Name");
-      await repository.save(genially);
-
-      // Act
-      await repository.delete(id);
-      const deletedGenially: Genially = await repository.find(id);
-
-      // Assert
-      expect(deletedGenially.deletedAt).toBeInstanceOf(Date);
-    });
-
-    it("should throw and exception when trying to erase an unknown genially", async () => {
-      // Arrange
-      const id = "unknown-genially-id";
-
-      // Act
-      const error = await getAsyncError<GeniallyNotExist>(async () => await repository.delete(id));
-
-      // Assert
-      expect(error.message).toContain(id);
-    });
-  });
-
   describe("countCreated", () => {
     it("should return 0 when repository is empty", async () => {
       expect(await repository.countCreated()).toEqual(new GeniallyCount(0));
@@ -89,10 +62,12 @@ describe("InMemoryGeniallyRepository", () => {
 
     it("does not decrease after a soft delete", async () => {
       const id = "id-soft-delete";
-      await repository.save(new Genially(createDynamicClock(), id, "name to delete"));
+      const genially = new Genially(createDynamicClock(), id, "name to delete");
+      await repository.save(genially);
 
       const before = await repository.countCreated();
-      await repository.delete(id);
+      genially.delete();
+      await repository.save(genially);
       const after = await repository.countCreated();
 
       expect(after).toEqual(before);

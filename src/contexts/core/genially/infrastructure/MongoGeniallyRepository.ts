@@ -50,12 +50,6 @@ export default class MongoGeniallyRepository implements GeniallyRepository {
     });
   }
 
-  async delete(id: string): Promise<void> {
-    const genially = await this.find(id);
-    genially.delete();
-    await this.save(genially);
-  }
-
   async countCreated(): Promise<GeniallyCount> {
     const totalGeniallysCreated = await this.geniallyCollection.countDocuments({});
     return new GeniallyCount(totalGeniallysCreated);

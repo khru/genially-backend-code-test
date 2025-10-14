@@ -9,6 +9,8 @@ export default class DeleteGeniallyService {
 
   public async execute(request: DeleteGeniallyServiceRequest): Promise<void> {
     const { id } = request;
-    await this.geniallyRepository.delete(id);
+    const genially = await this.geniallyRepository.find(id);
+    genially.delete();
+    await this.geniallyRepository.save(genially);
   }
 }

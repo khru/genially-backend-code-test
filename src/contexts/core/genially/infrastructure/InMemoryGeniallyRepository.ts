@@ -19,12 +19,6 @@ export default class InMemoryGeniallyRepository implements GeniallyRepository {
     return genially;
   }
 
-  async delete(id: string): Promise<void> {
-    const genially = await this.find(id);
-    genially.delete();
-    await this.save(genially);
-  }
-
   async countCreated(): Promise<GeniallyCount> {
     const totalGeniallysCreated = this.geniallys.length;
     return new GeniallyCount(totalGeniallysCreated);
