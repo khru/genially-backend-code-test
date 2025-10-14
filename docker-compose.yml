@@ -1,49 +1,49 @@
 services:
-    genially-api:
-        container_name: ${NODE_CONTAINER_NAME:-genially-api}
-        build:
-            context: .
-            dockerfile: Dockerfile
-            args:
-                NODE_VERSION: ${NODE_VERSION:-20}
-                NODE_PORT: ${NODE_PORT}
-        image: genially-api:${NODE_VERSION:-20}
-        restart: always
-        working_dir: /app
-        volumes:
-            - ./:/app
-            - /app/node_modules
-        ports:
-            - "${NODE_PORT}:${NODE_PORT}"
-        env_file:
-            - .env
-        environment:
-            - PORT=${NODE_PORT}
-            - NODE_ENV=${NODE_ENV:-development}
-        command: npm run dev
-        depends_on:
-            - genially-db
+  genially-api:
+    container_name: ${NODE_CONTAINER_NAME:-genially-api}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NODE_VERSION: ${NODE_VERSION:-20}
+        NODE_PORT: ${NODE_PORT}
+    image: genially-api:${NODE_VERSION:-20}
+    restart: always
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    ports:
+      - "${NODE_PORT}:${NODE_PORT}"
+    env_file:
+      - .env
+    environment:
+      - PORT=${NODE_PORT}
+      - NODE_ENV=${NODE_ENV:-development}
+    command: npm run dev
+    depends_on:
+      - genially-db
 
-    genially-db:
-        container_name: ${MONGO_CONTAINER_NAME:-genially-db}
-        image: mongo:${MONGO_VERSION:-8.0.12}
-        restart: always
-        env_file:
-            - .env
-        environment:
-            - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
-            - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
-            - MONGO_INITDB_DATABASE=${MONGO_DATABASE}
-        ports:
-            - "${MONGO_PORT:-27017}:27017"
-        volumes:
-            - mongodb_data:/data/db
-        healthcheck:
-            test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
-            interval: 10s
-            timeout: 5s
-            retries: 5
+  genially-db:
+    container_name: ${MONGO_CONTAINER_NAME:-genially-db}
+    image: mongo:${MONGO_VERSION:-8.0.12}
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_DATABASE}
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
-    mongodb_data:
-    node_modules:
+  mongodb_data:
+  node_modules:
