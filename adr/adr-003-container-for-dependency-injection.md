@@ -6,7 +6,7 @@
 
 ## Summary
 
-I need a Dependency Injection container that fits a Hexagonal architecture in Node.js while prioritising explicit
+I need a Dependency Injection container that fits a Hexagonal architecture in Node.js while prioritizing explicit
 configuration, minimal hidden behavior, simple migration from a configuration pattern, request-scoped lifecycles, and
 easy test doubles. After evaluating Awilix, InversifyJS, tsyringe, TypeDI, BottleJS, node-dependency-injection, NestJS’s
 built-in container, and continuing without a container, I choose **Awilix** in **classic injection mode** with explicit
@@ -109,7 +109,7 @@ registrations.
 **InversifyJS**
 
 - Positive: feature-rich, well known.
-- Negative: decorators and reflection metadata introduce hidden behaviour and a more complex setup; migration from
+- Negative: decorators and reflection metadata introduce hidden behavior and a more complex setup; migration from
   explicit configuration is more disruptive.
 
 **tsyringe**
@@ -130,11 +130,11 @@ registrations.
 **NestJS container**
 
 - Positive: strong inside NestJS.
-- Negative: I do not want framework lock-in or the additional hidden behaviour.
+- Negative: I do not want framework lock-in or the additional hidden behavior.
 
 **No container**
 
-- Positive: full control and zero hidden behaviour.
+- Positive: full control and zero hidden behavior.
 - Negative: lifecycle handling and test overrides become repetitive at scale.
 
 **Conclusion of analysis:** Awilix offers the best balance of explicitness, migration ease, scoping, testability, and

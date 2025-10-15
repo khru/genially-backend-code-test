@@ -18,14 +18,6 @@ export default [
     },
   },
   {
-    ignores: [
-      "node_modules/**",
-      "dist/**",
-      "coverage/**",
-      "**/*.d.ts",
-      "src/public/**",
-      "src/types/**",
-      "mongo-migrations/**",
-    ],
+    ignores: ["node_modules/**", "dist/**", "coverage/**", "**/*.d.ts", "src/public/**", "src/types/**"],
   },
 ];

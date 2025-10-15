@@ -13,7 +13,7 @@
     "!src/api/docs/**",
     "!src/api/routes/common.ts",
     "!src/api/app-factory.ts",
-    "!src/api/middleware.ts"
+    "!src/api/middleware/**"
   ],
   "ignorePatterns": [
     "dist/**",

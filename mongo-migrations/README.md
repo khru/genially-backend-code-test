@@ -121,7 +121,7 @@ npm --env-file=.env.local run migrate
 npm --env-file=.env.local run down
 ```
 
-### Rollback all Migration (Down)
+### Rollback all Migrations (Down)
 
 ```bash
 npm --env-file=.env.local run down:all
@@ -170,14 +170,14 @@ module.exports = {
    */
   async up(db) {
     // Forward migration logic
-    await db.createCollection('my_collection', {
+    await db.createCollection("my_collection", {
       validator: {
         $jsonSchema: {
-          bsonType: 'object',
-          required: ['field1', 'field2'],
+          bsonType: "object",
+          required: ["field1", "field2"],
           properties: {
-            field1: { bsonType: 'string' },
-            field2: { bsonType: 'number' },
+            field1: { bsonType: "string" },
+            field2: { bsonType: "number" },
           },
         },
       },
@@ -190,7 +190,7 @@ module.exports = {
    */
   async down(db) {
     // Rollback migration logic
-    await db.dropCollection('my_collection');
+    await db.dropCollection("my_collection");
   },
 };
 ```
@@ -227,7 +227,7 @@ Sample data is provided in `test-data/sample-data-genially.json`:
 
 ```bash
 # Import sample data manually
-mongoimport --db genially --collection promon-interface --file test-data/sample-data-genially.json --jsonArray
+mongoimport --db genially --collection geniallies --file test-data/sample-data-genially.json --jsonArray
 ```
 
 ## 📋 Best Practices

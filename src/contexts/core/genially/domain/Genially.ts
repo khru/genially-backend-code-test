@@ -43,10 +43,10 @@ export default class Genially {
 
     this._createdAt = this.clock.now();
 
-    this.throwErrorsIfThereAre();
+    this.throwIfErrorsPresent();
   }
 
-  private throwErrorsIfThereAre() {
+  private throwIfErrorsPresent() {
     if (this._validationErrors.length > this.thresholdErrors) {
       throw new GeniallyValidationError(this._validationErrors);
     }

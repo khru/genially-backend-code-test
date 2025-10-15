@@ -2,7 +2,7 @@
 
 Welcome to this code test! :)
 
-The main objective of this technical excercise is for you to get a good grasp of what kind of problems we encounter on
+The main objective of this technical exercise is for you to get a good grasp of what kind of problems we encounter on
 Genially. We wouldn't want you to find some nasty surprises if you decide to join us.
 
 # Test description
@@ -39,7 +39,7 @@ Additionally, each module of a bounded context is organized in different layers:
 | Name               | Description                                                                                        |
 | ------------------ | -------------------------------------------------------------------------------------------------- |
 | **application**    | Contains application services (i.e. use cases) that communicate with our domain                    |
-| **domain**         | Contains building blocks that conform our domain                                                   |
+| **domain**         | Contains building blocks that make up our domain                                                   |
 | **infrastructure** | Contains artifacts that interact with external world, such as a particular database or web service |
 
 As you will see, the project is in a very initial stage but some code has already been developed. Therefore, all the
@@ -100,7 +100,7 @@ server framework for Node.js.
 
 https://expressjs.com/
 
-## Typescript
+## TypeScript
 
 TypeScript is a typed superset of JavaScript that compiles to plain JavaScript. TypeScript adds optional types to
 JavaScript that support tools for large-scale JavaScript applications for any browser, for any host, on any OS.
@@ -117,9 +117,9 @@ If you have any questions about the test, you can contact any of us:
 
 Good Luck!
 
-## My though process
+## My thought process
 
-I save my though process on the [logbook](./logbook.md)
+I save my thought process on the [logbook](./logbook.md)
 
 ## Use of environment variables
 

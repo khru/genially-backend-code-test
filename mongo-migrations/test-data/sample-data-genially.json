@@ -126,7 +126,7 @@
   },
   {
     "_id": "cafe12ab-34cd-4e56-8f90-abcde1234567",
-    "name": "Hol_iday plan",
+    "name": "Holiday plan",
     "description": "Winter schedule",
     "createdAt": {
       "$date": {

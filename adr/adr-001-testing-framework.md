@@ -157,7 +157,7 @@ We will use **Jest with ts-jest and Supertest** as our testing framework.
    - Extensive documentation and community resources
    - Long-term maintenance guaranteed (Facebook/Meta backing)
 
-8. \***\*Technical Assessment Advantage**:
+8. **Technical Assessment Advantage:**
    - **Familiar toolset allows focus on business logic and architecture**
    - **Proven experience with Jest reduces setup time and potential issues**
    - **Well-documented patterns and best practices readily available**

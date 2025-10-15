@@ -18,7 +18,7 @@
 ## Tooling & CI
 
 - Added pipelines for lint, test, build (noted that a real project would also include security checks and image builds).
-- Testing strategy: acceptance for behaviour, unit tests for use cases with doubles, narrow integration tests when
+- Testing strategy: acceptance for behavior, unit tests for use cases with doubles, narrow integration tests when
   storage boundaries mattered.
 
 ## Mongo & Clean Architecture
@@ -32,12 +32,12 @@
 ## Finishing Touches & Reflection
 
 - Applied small type cleanups and polish after the core features were done.
-- Recognised the exercise is CRUD-centric; nonetheless kept the focus on behaviour-first testing and domain isolation.
+- Recognized the exercise is CRUD-centric; nonetheless kept the focus on behavior-first testing and domain isolation.
 
 ### Testing Strategy Highlights
 
-- Acceptance tests act as black-box checks of system behaviour.
+- Acceptance tests act as black-box checks of system behavior.
 - Use case services are unit-tested with doubled dependencies; persistence boundaries covered by narrow integration
   tests.
 - For side effects under team control, favour subcutaneous tests; for external systems, use contract tests (e.g., PACT).
-- Mutation testing helped identify weak or redundant specs when behaviour coverage looked thin.
+- Mutation testing helped identify weak or redundant specs when behavior coverage looked thin.

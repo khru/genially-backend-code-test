@@ -34,16 +34,8 @@ repo_root() {
     git rev-parse --show-toplevel 2>/dev/null || pwd
 }
 
-has_migration_changes() {
-  git diff --cached --name-only | grep -q '^mongo-migrations/' >/dev/null 2>&1
-}
-
-has_api_changes() {
-  git diff --cached --name-only | grep -qv '^mongo-migrations/' >/dev/null 2>&1
-}
-
 run_api_checks() {
-  echo "🧪 API changes detected. Running npm lint-stage and test pre-commit checks..."
+  echo "🧪 API changes detected. Running npm lint-staged and test pre-commit checks..."
 
   cd "$(repo_root)" || return 1
   echo "$(which nvm)"
@@ -55,7 +47,7 @@ run_api_checks() {
   echo "Run test ✅"
   npm test || return 1
 
-  echo "✅ Code is clean y tests passed! Ready to commit 🚀"
+  echo "✅ Code is clean and tests passed! Ready to commit 🚀"
 }
 
 check_migrations() {
@@ -70,35 +62,14 @@ check_migrations() {
   done
 }
 
-run_mongo_migrations_changes() {
-  echo "🧪 Mongo migration changes detected. Running mongo migration checks..."
-
-  cd "$(repo_root)/mongo-migrations" || return 1
-  ensure_node
-
-  echo "Checking migrations have up() and down()"
-  check_migrations || return 1
-
-  echo "Run lint 🧹"
-  npx lint-staged || return 1
-
-  echo "✅ Code is clean and tests passed! Ready to commit 🚀"
-}
-
 main() {
   api_exit_code=0
-  migrations_exit_code=0
+  echo "✅ Ensure migrations"
+  check_migrations || return 1
 
+  run_api_checks || api_exit_code=$?
 
-  if has_api_changes; then
-    run_api_checks || api_exit_code=$?
-  fi
-
-  if has_migration_changes; then
-      run_mongo_migrations_changes || migrations_exit_code=$?
-  fi
-
-  if [ "$api_exit_code" -ne 0 ] || [ "$migrations_exit_code" -ne 0 ]; then
+  if [ "$api_exit_code" -ne 0 ]; then
     exit 1
   fi
   exit 0
