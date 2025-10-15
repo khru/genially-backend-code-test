@@ -29,6 +29,13 @@
 - Replaced manual configuration wiring with an Awilix container, dropping multi-database complexity while keeping
   dependencies explicit.
 
+## Temporal Abstractions
+
+- Elevated time handling to a domain `Clock` contract so entities depend on an explicit collaborator instead of `Date.now`.
+- Implemented `SystemClock` in infrastructure; the DI container wires a single instance into factories and repositories to keep all layers time-consistent.
+- Let `MongoGeniallyRepository` reuse the injected clock when rehydrating documents, ensuring loaded `Genially` objects keep deterministic timestamp behavior for later mutations.
+- Centralized test doubles in `tests/shared/clock` (fixed/dynamic mocks) to drive scenarios like rename/delete with predictable timestamps while still asserting time-based side effects.
+
 ## Finishing Touches & Reflection
 
 - Applied small type cleanups and polish after the core features were done.
