@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import DeleteGeniallyService from "@application/DeleteGeniallyService";
-import { mapGeniallyError } from "@controllers/genially-error-mapper";
+import { mapGeniallyDomainErrorToHttpError } from "@controllers/genially-error-mapper";
 
 export function deleteGeniallyControllerFactory(deleteGeniallyService: DeleteGeniallyService) {
   return async (request: Request, response: Response) => {
@@ -8,7 +8,7 @@ export function deleteGeniallyControllerFactory(deleteGeniallyService: DeleteGen
       await deleteGeniallyService.execute({ id: request.params.id as string });
       return response.status(204).send();
     } catch (error) {
-      const mappedError = mapGeniallyError(error);
+      const mappedError = mapGeniallyDomainErrorToHttpError(error);
       if (mappedError) {
         return response.status(mappedError.status).json(mappedError.body);
       }

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import RenameGeniallyService from "@application/RenameGeniallyService";
 
 import { createGeniallyResponse, GeniallyResponse } from "@infrastructure/responses/GeniallyResponse";
-import { mapGeniallyError } from "@controllers/genially-error-mapper";
+import { mapGeniallyDomainErrorToHttpError } from "@controllers/genially-error-mapper";
 
 export function renameGeniallyControllerFactory(renameGeniallyService: RenameGeniallyService) {
   return async (request: Request, response: Response) => {
@@ -17,7 +17,7 @@ export function renameGeniallyControllerFactory(renameGeniallyService: RenameGen
       const body: GeniallyResponse = createGeniallyResponse(genially);
       return response.status(200).json(body);
     } catch (error) {
-      const mappedError = mapGeniallyError(error);
+      const mappedError = mapGeniallyDomainErrorToHttpError(error);
       if (mappedError) {
         return response.status(mappedError.status).json(mappedError.body);
       }
