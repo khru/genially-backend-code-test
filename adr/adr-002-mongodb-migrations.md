@@ -1,4 +1,4 @@
-# Choose a DB migration system for mondo with Node.js
+# Choose a DB migration system for Mongo with Node.js
 
 - **Status:** approved
 
