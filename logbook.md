@@ -31,10 +31,14 @@
 
 ## Temporal Abstractions
 
-- Elevated time handling to a domain `Clock` contract so entities depend on an explicit collaborator instead of `Date.now`.
-- Implemented `SystemClock` in infrastructure; the DI container wires a single instance into factories and repositories to keep all layers time-consistent.
-- Let `MongoGeniallyRepository` reuse the injected clock when rehydrating documents, ensuring loaded `Genially` objects keep deterministic timestamp behavior for later mutations.
-- Centralized test doubles in `tests/shared/clock` (fixed/dynamic mocks) to drive scenarios like rename/delete with predictable timestamps while still asserting time-based side effects.
+- Elevated time handling to a domain `Clock` contract so entities depend on an explicit collaborator instead of
+  `Date.now`.
+- Implemented `SystemClock` in infrastructure; the DI container wires a single instance into factories and repositories
+  to keep all layers time-consistent.
+- Let `MongoGeniallyRepository` reuse the injected clock when rehydrating documents, ensuring loaded `Genially` objects
+  keep deterministic timestamp behavior for later mutations.
+- Centralized test doubles in `tests/shared/clock` (fixed/dynamic mocks) to drive scenarios like rename/delete with
+  predictable timestamps while still asserting time-based side effects.
 
 ## Finishing Touches & Reflection
 
@@ -48,3 +52,22 @@
   tests.
 - For side effects under team control, favour subcutaneous tests; for external systems, use contract tests (e.g., PACT).
 - Mutation testing helped identify weak or redundant specs when behavior coverage looked thin.
+
+### More on my thinking about this topic here:
+
+- https://emmanuelvalverderamos.substack.com/p/what-makes-a-great-automated-test
+- https://emmanuelvalverderamos.substack.com/p/what-to-test-the-subject-under-test
+- https://emmanuelvalverderamos.substack.com/p/how-to-write-a-test
+- https://emmanuelvalverderamos.substack.com/p/unlock-the-secrets-of-software-testing
+- https://emmanuelvalverderamos.substack.com/p/deep-dive-into-the-relationship-between
+- https://emmanuelvalverderamos.substack.com/p/test-doubles
+- https://emmanuelvalverderamos.substack.com/p/unit-testing-basics
+- https://emmanuelvalverderamos.substack.com/p/integration-testing-basics
+- https://emmanuelvalverderamos.substack.com/p/exploring-testing-strategies-past
+- https://emmanuelvalverderamos.substack.com/p/test-driven-development-the-basics
+- https://emmanuelvalverderamos.substack.com/p/mockist-tdd-just-enough-design
+- https://emmanuelvalverderamos.substack.com/p/in-depth-view-to-peers-internals
+- https://emmanuelvalverderamos.substack.com/p/discovering-peers-with-goos-techniques
+- https://emmanuelvalverderamos.substack.com/p/outside-in-technics-pivote-and-drill
+- https://emmanuelvalverderamos.substack.com/p/test-driven-development-styles-classicist
+- https://emmanuelvalverderamos.substack.com/p/happy-path-vs-sad-paths-personal
